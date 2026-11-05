@@ -1,0 +1,36 @@
+PASS  dinner.description: 'Dinner'
+PASS  dinner.amount_cents: 8000
+PASS  dinner.split_count: 4
+PASS  dinner.split: ['Parthey', 'Shannon', 'Het', 'Maya']
+PASS  taxi.description: 'Taxi'
+PASS  taxi.amount_cents: 2400
+PASS  taxi.payer: 'Shannon'
+PASS  taxi.split: ['Parthey', 'Shannon']
+PASS  groceries.description: 'Groceries'
+PASS  groceries.amount_cents: 12000
+PASS  groceries.split_mode: 'equal'
+PASS  groceries.split: ['Parthey', 'Shannon', 'Het', 'Maya']
+PASS  pizza.description: 'Pizza'
+PASS  pizza.amount_cents: 6000
+PASS  pizza.payer: 'Parthey'
+PASS  pizza.split: ['Parthey', 'Shannon']
+PASS  words.eighty: 80
+PASS  words.125: 125
+PASS  words.2300: 2300
+PASS  equal.100by3: [3334, 3333, 3333]
+PASS  exact.ok: [3000, 2000]
+PASS  exact.bad.rejected: True
+PASS  percent.90: [4500, 2250, 2250]
+PASS  receipt.subtotal: 4200
+PASS  receipt.total: 5460
+PASS  receipt.member1: 3380
+PASS  receipt.member2: 2080
+PASS  csv.members: ['Parthey', 'Shannon', 'Het']
+PASS  csv.rows: 3
+PASS  csv.errors: 1
+PASS  csv.error.row4: True
+PASS  csv.dinner.payer: 'Parthey'
+PASS  csv.dinner.splits: {'Shannon': 4000, 'Parthey': 4000}
+
+MIRROR CHECK PASSED: all expected values match the web implementation.
+Reminder: this validates the logic design only — not Swift compilation.

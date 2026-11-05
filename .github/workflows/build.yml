@@ -1,0 +1,42 @@
+name: Build SaySplit (unsigned)
+
+# Builds the app on a macOS runner with signing disabled, so a real
+# compile is reachable even though the project is authored on Linux.
+# This workflow has NOT been run yet — it runs for the first time when
+# this repo is pushed to GitHub. Do not treat it as a green check
+# until a run actually passes there.
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: xcodebuild (unsigned)
+    runs-on: macos-14
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Build the app (no signing)
+        run: |
+          xcodebuild build \
+            -project SaySplit.xcodeproj \
+            -scheme SaySplit \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+
+      - name: Run unit tests on a simulator (no signing)
+        run: |
+          xcodebuild test \
+            -project SaySplit.xcodeproj \
+            -scheme SaySplit \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO

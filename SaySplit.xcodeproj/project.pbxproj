@@ -1,0 +1,379 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D20000000000000000000001 /* SaySplitApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000001 /* SaySplitApp.swift */; };
+		D20000000000000000000002 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000002 /* Models.swift */; };
+		D20000000000000000000003 /* CoreLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000003 /* CoreLogic.swift */; };
+		D20000000000000000000004 /* CommandParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000004 /* CommandParser.swift */; };
+		D20000000000000000000005 /* SplitwiseCSV.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000005 /* SplitwiseCSV.swift */; };
+		D20000000000000000000006 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000006 /* Store.swift */; };
+		D20000000000000000000007 /* SpeechRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000007 /* SpeechRecognizer.swift */; };
+		D20000000000000000000008 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000008 /* ContentView.swift */; };
+		D20000000000000000000009 /* GroupDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000009 /* GroupDetailView.swift */; };
+		D20000000000000000000010 /* ExpenseEntryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000010 /* ExpenseEntryViews.swift */; };
+		D20000000000000000000011 /* ImportExportViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000011 /* ImportExportViews.swift */; };
+		D20000000000000000000012 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000012 /* Assets.xcassets */; };
+		D40000000000000000000001 /* SaySplitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30000000000000000000001 /* SaySplitTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A50000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A10000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A20000000000000000000001;
+			remoteInfo = SaySplit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D10000000000000000000001 /* SaySplitApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaySplitApp.swift; sourceTree = "<group>"; };
+		D10000000000000000000002 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		D10000000000000000000003 /* CoreLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreLogic.swift; sourceTree = "<group>"; };
+		D10000000000000000000004 /* CommandParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandParser.swift; sourceTree = "<group>"; };
+		D10000000000000000000005 /* SplitwiseCSV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitwiseCSV.swift; sourceTree = "<group>"; };
+		D10000000000000000000006 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		D10000000000000000000007 /* SpeechRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizer.swift; sourceTree = "<group>"; };
+		D10000000000000000000008 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D10000000000000000000009 /* GroupDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailView.swift; sourceTree = "<group>"; };
+		D10000000000000000000010 /* ExpenseEntryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseEntryViews.swift; sourceTree = "<group>"; };
+		D10000000000000000000011 /* ImportExportViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportViews.swift; sourceTree = "<group>"; };
+		D10000000000000000000012 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D10000000000000000000013 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D10000000000000000000090 /* SaySplit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SaySplit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D30000000000000000000001 /* SaySplitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaySplitTests.swift; sourceTree = "<group>"; };
+		D30000000000000000000090 /* SaySplitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SaySplitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A40000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A40000000000000000000005 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A10000000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000004 /* SaySplit */,
+				A10000000000000000000005 /* SaySplitTests */,
+				A10000000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A10000000000000000000004 /* SaySplit */ = {
+			isa = PBXGroup;
+			children = (
+				D10000000000000000000001 /* SaySplitApp.swift */,
+				D10000000000000000000002 /* Models.swift */,
+				D10000000000000000000003 /* CoreLogic.swift */,
+				D10000000000000000000004 /* CommandParser.swift */,
+				D10000000000000000000005 /* SplitwiseCSV.swift */,
+				D10000000000000000000006 /* Store.swift */,
+				D10000000000000000000007 /* SpeechRecognizer.swift */,
+				D10000000000000000000008 /* ContentView.swift */,
+				D10000000000000000000009 /* GroupDetailView.swift */,
+				D10000000000000000000010 /* ExpenseEntryViews.swift */,
+				D10000000000000000000011 /* ImportExportViews.swift */,
+				D10000000000000000000012 /* Assets.xcassets */,
+				D10000000000000000000013 /* Info.plist */,
+			);
+			path = SaySplit;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000005 /* SaySplitTests */ = {
+			isa = PBXGroup;
+			children = (
+				D30000000000000000000001 /* SaySplitTests.swift */,
+			);
+			path = SaySplitTests;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D10000000000000000000090 /* SaySplit.app */,
+				D30000000000000000000090 /* SaySplitTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A20000000000000000000001 /* SaySplit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A30000000000000000000002 /* Build configuration list for PBXNativeTarget "SaySplit" */;
+			buildPhases = (
+				A40000000000000000000001 /* Sources */,
+				A40000000000000000000002 /* Frameworks */,
+				A40000000000000000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SaySplit;
+			productName = SaySplit;
+			productReference = D10000000000000000000090 /* SaySplit.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A20000000000000000000002 /* SaySplitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A30000000000000000000003 /* Build configuration list for PBXNativeTarget "SaySplitTests" */;
+			buildPhases = (
+				A40000000000000000000004 /* Sources */,
+				A40000000000000000000005 /* Frameworks */,
+				A40000000000000000000006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A50000000000000000000002 /* PBXTargetDependency */,
+			);
+			name = SaySplitTests;
+			productName = SaySplitTests;
+			productReference = D30000000000000000000090 /* SaySplitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A10000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					A20000000000000000000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					A20000000000000000000002 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = A20000000000000000000001;
+					};
+				};
+			};
+			buildConfigurationList = A30000000000000000000001 /* Build configuration list for PBXProject "SaySplit" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A10000000000000000000002;
+			productRefGroup = A10000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A20000000000000000000001 /* SaySplit */,
+				A20000000000000000000002 /* SaySplitTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A40000000000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D20000000000000000000012 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A40000000000000000000006 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A40000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D20000000000000000000001 /* SaySplitApp.swift in Sources */,
+				D20000000000000000000002 /* Models.swift in Sources */,
+				D20000000000000000000003 /* CoreLogic.swift in Sources */,
+				D20000000000000000000004 /* CommandParser.swift in Sources */,
+				D20000000000000000000005 /* SplitwiseCSV.swift in Sources */,
+				D20000000000000000000006 /* Store.swift in Sources */,
+				D20000000000000000000007 /* SpeechRecognizer.swift in Sources */,
+				D20000000000000000000008 /* ContentView.swift in Sources */,
+				D20000000000000000000009 /* GroupDetailView.swift in Sources */,
+				D20000000000000000000010 /* ExpenseEntryViews.swift in Sources */,
+				D20000000000000000000011 /* ImportExportViews.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A40000000000000000000004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D40000000000000000000001 /* SaySplitTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A50000000000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A20000000000000000000001 /* SaySplit */;
+			targetProxy = A50000000000000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A30000000000000000000011 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A30000000000000000000012 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		A30000000000000000000021 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = SaySplit/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.parthey.saysplit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A30000000000000000000022 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = SaySplit/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.parthey.saysplit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		A30000000000000000000031 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.parthey.saysplit.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SaySplit.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SaySplit";
+			};
+			name = Debug;
+		};
+		A30000000000000000000032 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.parthey.saysplit.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SaySplit.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SaySplit";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A30000000000000000000001 /* Build configuration list for PBXProject "SaySplit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A30000000000000000000011 /* Debug */,
+				A30000000000000000000012 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A30000000000000000000002 /* Build configuration list for PBXNativeTarget "SaySplit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A30000000000000000000021 /* Debug */,
+				A30000000000000000000022 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A30000000000000000000003 /* Build configuration list for PBXNativeTarget "SaySplitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A30000000000000000000031 /* Debug */,
+				A30000000000000000000032 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A10000000000000000000001 /* Project object */;
+}

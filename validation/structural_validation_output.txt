@@ -1,0 +1,24 @@
+PASS  no conflict markers  []
+PASS  pbxproj: every object defined exactly once (duplicate-definition check)  53 definitions, 53 unique, dups={}
+PASS  pbxproj: no dangling references  53 distinct ids referenced, dangling=set()
+PASS  pbxproj: balanced braces  {=66 }=66
+PASS  pbxproj: balanced parens  (=35 )=35
+PASS  pbxproj: group listings hold references only  47 child entries
+PASS  pbxproj: every referenced file exists on disk  16 file refs, missing=[]
+PASS  swift file set in project == on disk  project=['CommandParser.swift', 'ContentView.swift', 'CoreLogic.swift', 'ExpenseEntryViews.swift', 'GroupDetailView.swift', 'ImportExportViews.swift', 'Models.swift', 'SaySplitApp.swift', 'SaySplitTests.swift', 'SpeechRecognizer.swift', 'SplitwiseCSV.swift', 'Store.swift'] disk=['CommandParser.swift', 'ContentView.swift', 'CoreLogic.swift', 'ExpenseEntryViews.swift', 'GroupDetailView.swift', 'ImportExportViews.swift', 'Models.swift', 'SaySplitApp.swift', 'SaySplitTests.swift', 'SpeechRecognizer.swift', 'SplitwiseCSV.swift', 'Store.swift']
+PASS  swift files: brace/paren/bracket balance  []
+PASS  Info.plist parses (plistlib)  15 keys
+PASS  Info.plist: NSMicrophoneUsageDescription present  
+PASS  Info.plist: NSSpeechRecognitionUsageDescription present  
+PASS  asset catalog Contents.json files parse as JSON  3 files
+PASS  scheme XML parses; blueprint ids defined in pbxproj  blueprints={'A20000000000000000000002', 'A20000000000000000000001'}
+PASS  scheme has Testables for SaySplitTests  
+PASS  CI workflow: macos runner + xcodebuild + signing disabled  
+PASS  build setting present: IPHONEOS_DEPLOYMENT_TARGET  
+PASS  build setting present: PRODUCT_BUNDLE_IDENTIFIER  
+PASS  build setting present: INFOPLIST_FILE  
+PASS  build setting present: GENERATE_INFOPLIST_FILE  
+PASS  build setting present: TARGETED_DEVICE_FAMILY  
+PASS  build setting present: TEST_HOST  
+
+TOTAL: 22 checks, 22 passed, 0 failed
