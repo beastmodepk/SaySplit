@@ -15,7 +15,7 @@ on:
 jobs:
   build:
     name: xcodebuild (unsigned)
-    runs-on: macos-14
+    runs-on: macos-26
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -37,6 +37,6 @@ jobs:
           xcodebuild test \
             -project SaySplit.xcodeproj \
             -scheme SaySplit \
-            -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
+            -destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO
