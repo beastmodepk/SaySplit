@@ -396,7 +396,7 @@ struct ReceiptExpenseView: View {
             DatePicker("Date", selection: $date, displayedComponents: .date)
         }
         Section {
-            PhotosPicker(item: $photoItem, matching: .images) {
+            PhotosPicker(selection: $photoItem, matching: .images) {
                 Label(photoData == nil ? "Attach receipt photo"
                                        : "Receipt photo attached — tap to change",
                       systemImage: "photo")
