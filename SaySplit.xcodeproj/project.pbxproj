@@ -18,6 +18,7 @@
 		D20000000000000000000009 /* GroupDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000009 /* GroupDetailView.swift */; };
 		D20000000000000000000010 /* ExpenseEntryViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000010 /* ExpenseEntryViews.swift */; };
 		D20000000000000000000011 /* ImportExportViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000011 /* ImportExportViews.swift */; };
+		D20000000000000000000014 /* PaymentsComingSoonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000014 /* PaymentsComingSoonView.swift */; };
 		D20000000000000000000012 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000012 /* Assets.xcassets */; };
 		D40000000000000000000001 /* SaySplitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30000000000000000000001 /* SaySplitTests.swift */; };
 /* End PBXBuildFile section */
@@ -44,6 +45,7 @@
 		D10000000000000000000009 /* GroupDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDetailView.swift; sourceTree = "<group>"; };
 		D10000000000000000000010 /* ExpenseEntryViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseEntryViews.swift; sourceTree = "<group>"; };
 		D10000000000000000000011 /* ImportExportViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportViews.swift; sourceTree = "<group>"; };
+		D10000000000000000000014 /* PaymentsComingSoonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsComingSoonView.swift; sourceTree = "<group>"; };
 		D10000000000000000000012 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D10000000000000000000013 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D10000000000000000000090 /* SaySplit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SaySplit.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -92,6 +94,7 @@
 				D10000000000000000000009 /* GroupDetailView.swift */,
 				D10000000000000000000010 /* ExpenseEntryViews.swift */,
 				D10000000000000000000011 /* ImportExportViews.swift */,
+				D10000000000000000000014 /* PaymentsComingSoonView.swift */,
 				D10000000000000000000012 /* Assets.xcassets */,
 				D10000000000000000000013 /* Info.plist */,
 			);
@@ -225,6 +228,7 @@
 				D20000000000000000000009 /* GroupDetailView.swift in Sources */,
 				D20000000000000000000010 /* ExpenseEntryViews.swift in Sources */,
 				D20000000000000000000011 /* ImportExportViews.swift in Sources */,
+				D20000000000000000000014 /* PaymentsComingSoonView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

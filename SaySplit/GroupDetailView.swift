@@ -15,6 +15,7 @@ struct GroupDetailView: View {
     @State private var showingReceipt = false
     @State private var settlePrefill: DebtTransfer? = nil
     @State private var showingSettle = false
+    @State private var showingPayments = false
 
     @State private var showingAddMember = false
     @State private var newMemberName = ""
@@ -66,6 +67,19 @@ struct GroupDetailView: View {
         .sheet(isPresented: $showingSettle) {
             if let group = group {
                 SettleUpView(group: group, prefill: settlePrefill) { showingSettle = false }
+            }
+        }
+        .sheet(isPresented: $showingPayments) {
+            if let group = group {
+                NavigationStack {
+                    PaymentsComingSoonView(group: group,
+                                           transfers: store.simplifiedDebts(groupID: groupID))
+                        .toolbar {
+                            ToolbarItem(placement: .confirmationAction) {
+                                Button("Done") { showingPayments = false }
+                            }
+                        }
+                }
             }
         }
         .alert("Add Member", isPresented: $showingAddMember) {
@@ -213,6 +227,15 @@ struct GroupDetailView: View {
                     showingSettle = true
                 } label: {
                     Label("Record a settle-up", systemImage: "checkmark.circle")
+                }
+                Button {
+                    showingPayments = true
+                } label: {
+                    HStack {
+                        Label("Pay & get paid", systemImage: "banknote")
+                        Spacer()
+                        ComingSoonBadge()
+                    }
                 }
             }
         } header: {
