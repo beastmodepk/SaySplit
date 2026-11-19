@@ -361,98 +361,8 @@ struct ReceiptExpenseView: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                Section {
-                    TextField("Description", text: $descriptionText)
-                    Picker("Paid by", selection: $payerID) {
-                        ForEach(group.members) { member in
-                            Text(member.name).tag(Optional(member.id))
-                        }
-                    }
-                    DatePicker("Date", selection: $date, displayedComponents: .date)
-                }
-                Section {
-                    PhotosPicker(item: $photoItem, matching: .images) {
-                        Label(photoData == nil ? "Attach receipt photo"
-                                               : "Receipt photo attached — tap to change",
-                              systemImage: "photo")
-                    }
-                    if let photoData = photoData, let image = UIImage(data: photoData) {
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(maxHeight: 180)
-                    }
-                    Text("No OCR — enter items from the photo by hand below. "
-                         + "The photo is kept only as a reference.")
-                        .font(.footnote).foregroundStyle(.secondary)
-                } header: {
-                    Text("Receipt photo (reference only)")
-                }
-                ForEach($items) { $item in
-                    Section {
-                        TextField("Item name, e.g. Pancakes", text: $item.name)
-                        HStack {
-                            Text("Price $")
-                            TextField("0.00", text: $item.priceText)
-                                .keyboardType(.decimalPad)
-                        }
-                        Text("Who had it? (shared items split between everyone ticked)")
-                            .font(.footnote).foregroundStyle(.secondary)
-                        MemberChips(members: group.members, selectedIDs: $item.assigneeIDs)
-                        if items.count > 1 {
-                            Button(role: .destructive) {
-                                items.removeAll { $0.id == item.id }
-                            } label: {
-                                Text("Remove item")
-                            }
-                        }
-                    }
-                }
-                Section {
-                    Button {
-                        items.append(ReceiptItemDraft())
-                    } label: {
-                        Label("Add another item", systemImage: "plus")
-                    }
-                }
-                Section {
-                    HStack {
-                        Text("Tax $")
-                        TextField("0.00", text: $taxText).keyboardType(.decimalPad)
-                    }
-                    HStack {
-                        Text("Tip $")
-                        TextField("0.00", text: $tipText).keyboardType(.decimalPad)
-                    }
-                    if let preview = preview {
-                        Text("Subtotal \(Money.format(preview.subtotal)) · "
-                             + "Total \(Money.format(preview.total))")
-                            .font(.subheadline.bold())
-                        ForEach(group.members) { member in
-                            if let cents = preview.perMember[member.id] {
-                                HStack {
-                                    Text(member.name)
-                                    Spacer()
-                                    Text(Money.format(cents))
-                                }
-                                .font(.subheadline)
-                            }
-                        }
-                    } else {
-                        Text("Add priced items with people assigned and the "
-                             + "reconciled per-person totals will appear here. "
-                             + "Tax and tip are shared in proportion to what each person had.")
-                            .font(.footnote).foregroundStyle(.secondary)
-                    }
-                } header: {
-                    Text("Tax, tip & totals")
-                }
-                if let errorMessage = errorMessage {
-                    Section {
-                        Text(errorMessage).foregroundStyle(.red).font(.footnote)
-                    }
-                }
+            SwiftUI.Form {
+                receiptFormContent
             }
             .navigationTitle("Receipt expense")
             .navigationBarTitleDisplayMode(.inline)
@@ -470,6 +380,101 @@ struct ReceiptExpenseView: View {
                         photoData = data
                     }
                 }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var receiptFormContent: some View {
+        Section {
+            TextField("Description", text: $descriptionText)
+            Picker("Paid by", selection: $payerID) {
+                ForEach(group.members) { member in
+                    Text(member.name).tag(Optional(member.id))
+                }
+            }
+            DatePicker("Date", selection: $date, displayedComponents: .date)
+        }
+        Section {
+            PhotosPicker(item: $photoItem, matching: .images) {
+                Label(photoData == nil ? "Attach receipt photo"
+                                       : "Receipt photo attached — tap to change",
+                      systemImage: "photo")
+            }
+            if let photoData = photoData, let image = UIImage(data: photoData) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxHeight: 180)
+            }
+            Text("No OCR — enter items from the photo by hand below. "
+                 + "The photo is kept only as a reference.")
+                .font(.footnote).foregroundStyle(.secondary)
+        } header: {
+            Text("Receipt photo (reference only)")
+        }
+        ForEach($items) { $item in
+            Section {
+                TextField("Item name, e.g. Pancakes", text: $item.name)
+                HStack {
+                    Text("Price $")
+                    TextField("0.00", text: $item.priceText)
+                        .keyboardType(.decimalPad)
+                }
+                Text("Who had it? (shared items split between everyone ticked)")
+                    .font(.footnote).foregroundStyle(.secondary)
+                MemberChips(members: group.members, selectedIDs: $item.assigneeIDs)
+                if items.count > 1 {
+                    Button(role: .destructive) {
+                        items.removeAll { $0.id == item.id }
+                    } label: {
+                        Text("Remove item")
+                    }
+                }
+            }
+        }
+        Section {
+            Button {
+                items.append(ReceiptItemDraft())
+            } label: {
+                Label("Add another item", systemImage: "plus")
+            }
+        }
+        Section {
+            HStack {
+                Text("Tax $")
+                TextField("0.00", text: $taxText).keyboardType(.decimalPad)
+            }
+            HStack {
+                Text("Tip $")
+                TextField("0.00", text: $tipText).keyboardType(.decimalPad)
+            }
+            if let preview = preview {
+                Text("Subtotal \(Money.format(preview.subtotal)) · "
+                     + "Total \(Money.format(preview.total))")
+                    .font(.subheadline.bold())
+                ForEach(group.members) { member in
+                    if let cents = preview.perMember[member.id] {
+                        HStack {
+                            Text(member.name)
+                            Spacer()
+                            Text(Money.format(cents))
+                        }
+                        .font(.subheadline)
+                    }
+                }
+            } else {
+                Text("Add priced items with people assigned and the "
+                     + "reconciled per-person totals will appear here. "
+                     + "Tax and tip are shared in proportion to what each person had.")
+                    .font(.footnote).foregroundStyle(.secondary)
+            }
+        } header: {
+            Text("Tax, tip & totals")
+        }
+        if let errorMessage = errorMessage {
+            Section {
+                Text(errorMessage).foregroundStyle(.red).font(.footnote)
             }
         }
     }
