@@ -45,6 +45,50 @@ final class SaySplitTests: XCTestCase {
         }
     }
 
+    // MARK: - Enriched word lists
+
+    func testEarthIsAValidGuess() {
+        // Regression: Build 91 rejected EARTH with "Not in word list".
+        XCTAssertTrue(WordLists.isValidGuess("EARTH"))
+        XCTAssertTrue(WordLists.isValidGuess("earth"))
+    }
+
+    func testDictionarySampleWordsValidate() {
+        for w in ["AUDIO", "CRANE", "SLATE", "HEART", "WORLD", "PLANT", "BRAVE", "MOIST", "FJORD", "JAZZY", "TRAIL", "STARE"] {
+            XCTAssertTrue(WordLists.isValidGuess(w), "\(w) should validate")
+        }
+        XCTAssertFalse(WordLists.isValidGuess("XXXXX"))
+        XCTAssertFalse(WordLists.isValidGuess("ZZZZZ"))
+        XCTAssertGreaterThanOrEqual(WordDictionary.count, 8000)
+    }
+
+    func testAnswerBanksEnrichedAndWellFormed() {
+        XCTAssertGreaterThanOrEqual(WordLists.easyAnswers.count, 250)
+        XCTAssertGreaterThanOrEqual(WordLists.mediumAnswers.count, 250)
+        XCTAssertGreaterThanOrEqual(WordLists.hardAnswers.count, 150)
+        for list in [WordLists.easyAnswers, WordLists.mediumAnswers, WordLists.hardAnswers] {
+            XCTAssertEqual(list.count, Set(list).count, "answers must be unique within a bank")
+            for w in list {
+                XCTAssertEqual(w.count, 5, "\(w) must be 5 letters")
+                XCTAssertTrue(WordLists.isValidGuess(w), "answer \(w) must be a valid guess")
+            }
+        }
+        XCTAssertTrue(Set(WordLists.easyAnswers).isDisjoint(with: Set(WordLists.mediumAnswers)))
+        XCTAssertTrue(Set(WordLists.easyAnswers).isDisjoint(with: Set(WordLists.hardAnswers)))
+        XCTAssertTrue(Set(WordLists.mediumAnswers).isDisjoint(with: Set(WordLists.hardAnswers)))
+    }
+
+    func testDailyWordDeterminismWithNewBanks() {
+        let today = GameCalendar.today
+        let yesterday = GameCalendar.adding(days: -1, to: today)
+        for difficulty in WordDifficulty.allCases {
+            XCTAssertEqual(DailyWordProvider.dailyWord(difficulty: difficulty, date: yesterday),
+                           DailyWordProvider.dailyWord(difficulty: difficulty, date: yesterday))
+            XCTAssertTrue(difficulty.answers.contains(DailyWordProvider.dailyWord(difficulty: difficulty, date: today)),
+                          "daily word must come from the \(difficulty) bank")
+        }
+    }
+
     // MARK: - Connections
 
     func testConnectionsPuzzlesWellFormed() {
