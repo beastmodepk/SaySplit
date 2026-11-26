@@ -127,12 +127,10 @@ enum ConnectionsPuzzles {
         let day = Int(date.timeIntervalSince1970 / 86400)
         return all[abs(day) % all.count]
     }
-    static func randomPuzzle() -> ConnectionsPuzzle { all.randomElement() ?? all[0] }
 }
 
 struct ConnectionsView: View {
     @State private var puzzle: ConnectionsPuzzle = ConnectionsPuzzles.daily()
-    @State private var isPractice = false
     @State private var remaining: [String] = []
     @State private var selected: Set<String> = []
     @State private var solved: [ConnectionsGroup] = []
@@ -145,13 +143,6 @@ struct ConnectionsView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 12) {
-                    Picker("Mode", selection: $isPractice) {
-                        Text("Daily").tag(false)
-                        Text("Unlimited").tag(true)
-                    }
-                    .pickerStyle(.segmented)
-                    .onChange(of: isPractice) { _, _ in startGame() }
-
                     Text("Create four groups of four · Mistakes left: \(max(0, 4 - mistakes))")
                         .font(.subheadline).foregroundStyle(.secondary)
 
@@ -188,7 +179,6 @@ struct ConnectionsView: View {
                         Button("Deselect") { selected.removeAll() }.buttonStyle(.bordered)
                         Button("Submit") { submit() }.buttonStyle(.borderedProminent).disabled(selected.count != 4 || finished)
                     }
-                    Button("New Puzzle") { startGame() }.buttonStyle(.bordered)
                 }
                 .padding()
             }
@@ -228,7 +218,7 @@ struct ConnectionsView: View {
     }
 
     private func startGame() {
-        puzzle = isPractice ? ConnectionsPuzzles.randomPuzzle() : ConnectionsPuzzles.daily()
+        puzzle = ConnectionsPuzzles.daily()
         remaining = puzzle.allWords.shuffled()
         selected = []; solved = []; mistakes = 0; message = ""; finished = false; won = false
     }

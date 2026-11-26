@@ -2,7 +2,6 @@ import SwiftUI
 
 struct WordleView: View {
     @State private var difficulty: WordDifficulty = .easy
-    @State private var isPractice = false
     @State private var answer: String = DailyWordProvider.dailyWord(difficulty: .easy)
     @State private var guesses: [String] = []
     @State private var current: String = ""
@@ -33,14 +32,7 @@ struct WordleView: View {
                     .pickerStyle(.segmented)
                     .onChange(of: difficulty) { _, _ in startGame() }
 
-                    Picker("Mode", selection: $isPractice) {
-                        Text("Daily").tag(false)
-                        Text("Practice").tag(true)
-                    }
-                    .pickerStyle(.segmented)
-                    .onChange(of: isPractice) { _, _ in startGame() }
-
-                    Text(isPractice ? "Unlimited practice" : "Today's \(difficulty.title) word")
+                    Text("Today's \(difficulty.title) word")
                         .font(.subheadline).foregroundStyle(.secondary)
                     Text("Played \(WordStats.played(difficulty)) · Won \(WordStats.won(difficulty)) · Streak \(WordStats.streak(difficulty))")
                         .font(.caption).foregroundStyle(.secondary)
@@ -58,7 +50,7 @@ struct WordleView: View {
 
                     keyboard
 
-                    Button(isPractice ? "New Practice Game" : "Replay Today") { startGame() }
+                    Button("Replay Today") { startGame() }
                         .buttonStyle(.bordered)
                 }
                 .padding()
@@ -159,7 +151,7 @@ struct WordleView: View {
         }
     }
     private func startGame() {
-        answer = isPractice ? DailyWordProvider.practiceWord(difficulty: difficulty) : DailyWordProvider.dailyWord(difficulty: difficulty)
+        answer = DailyWordProvider.dailyWord(difficulty: difficulty)
         guesses = []; current = ""; message = ""; finished = false; won = false
     }
 }

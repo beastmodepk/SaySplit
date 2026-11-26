@@ -59,9 +59,6 @@ enum DailyWordProvider {
         let idx = abs(dayNumber(for: date) * 31 + difficulty.seedOffset) % list.count
         return list[idx]
     }
-    static func practiceWord(difficulty: WordDifficulty) -> String {
-        difficulty.answers.randomElement() ?? difficulty.answers[0]
-    }
 }
 
 enum WordLists {

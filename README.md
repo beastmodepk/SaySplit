@@ -11,13 +11,12 @@ App Store record are intentionally unchanged for now:
 - **Wordle tab:** Instead of 1 word a day, **3 daily words — Easy, Medium, Hard**.
   Each difficulty has its own deterministic daily word (same all day), its own
   board, 6 guesses, 5-letter grid, on-screen keyboard (green/yellow/gray),
-  correct duplicate-letter handling, win/lose + answer reveal, simple local
-  stats/streaks (UserDefaults), and Unlimited Practice per difficulty.
+  correct duplicate-letter handling, win/lose + answer reveal, and simple local
+  stats/streaks (UserDefaults). Daily-only — there is no Practice mode.
 - **Connections tab:** 16 words, 4 groups of 4 with category names and
   yellow/green/blue/purple levels. Select 4, Submit / Deselect / Shuffle,
   4 mistakes allowed, correct groups lock in, win/lose states.
-  Daily puzzle is deterministic by date from 14 embedded puzzles, plus
-  Unlimited / New Puzzle.
+  Daily puzzle is deterministic by date from 14 embedded puzzles. Daily-only.
 
 ## Test access (demo mode — no login)
 
