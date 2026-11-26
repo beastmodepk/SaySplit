@@ -29,10 +29,26 @@ show the puzzles *for the selected date* (Wordle Easy/Medium/Hard words and
 the Connections board are seeded deterministically by date), and each date
 keeps its own board/progress (UserDefaults, keyed by date).
 
+## Sign-in & history
+
+Playing never requires an account (guest play is stored under a "guest" key).
+The **Account** tab offers sign-in so history follows the account:
+
+- **Sign in with Apple — live.** Native AuthenticationServices flow; the
+  Apple user ID (+ name/email, which Apple only sends on first authorization)
+  is stored on-device. Stats, per-date progress and history are then keyed by
+  that account, and the Account tab shows the account's history (date, game,
+  result for every finished board).
+- **Continue with Google (Gmail) — coming soon.** Shown in the UI, but
+  **gated on a Google Cloud OAuth client ID for this app, which does not
+  exist yet** — no SDK is linked and no credentials are invented. Tapping it
+  explains the pending setup.
+- **Continue with Email — coming soon**, same treatment (no auth backend yet).
+
 ## Test access (demo mode — no login)
 
 **TestFlight Test Information (copy-ready):**
-> No account needed — open app, Wordle tab has 3 daily words Easy/Medium/Hard, Connections tab is the grouping game.
+> No account needed — open app, Wordle tab has 3 daily words Easy/Medium/Hard, Connections tab is the grouping game. Optional: Account tab → Sign in with Apple to keep history under your account (Google/Email sign-in not configured yet).
 
 No account, no server, no network calls. Everything is on-device.
 

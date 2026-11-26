@@ -134,7 +134,7 @@ enum WordLists {
 
 enum WordStats {
     private static func key(_ difficulty: WordDifficulty, _ field: String) -> String {
-        "wordstats.\(difficulty.rawValue).\(field)"
+        "acct.\(AuthManager.currentStorageKey).wordstats.\(difficulty.rawValue).\(field)"
     }
     static func record(difficulty: WordDifficulty, won: Bool) {
         let d = UserDefaults.standard

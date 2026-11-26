@@ -125,4 +125,19 @@ final class SaySplitTests: XCTestCase {
         XCTAssertEqual(saved?.mistakes, 2)
         XCTAssertEqual(saved?.remaining, ["APPLE"])
     }
+
+    // MARK: - Auth & history
+
+    func testAuthProvidersConfiguration() {
+        XCTAssertTrue(AuthProviders.isConfigured(.apple))
+        XCTAssertFalse(AuthProviders.isConfigured(.google))
+        XCTAssertFalse(AuthProviders.isConfigured(.email))
+    }
+
+    func testGuestStorageKeyAndHistoryRoundTrip() {
+        XCTAssertEqual(AuthManager.currentStorageKey, "guest")
+        GameHistory.record(dateKey: "2026-11-25", game: "Wordle Easy", detail: "Won in 3", won: true)
+        let entries = GameHistory.entries()
+        XCTAssertTrue(entries.contains { $0.dateKey == "2026-11-25" && $0.game == "Wordle Easy" && $0.won })
+    }
 }

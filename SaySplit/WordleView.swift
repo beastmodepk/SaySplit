@@ -155,10 +155,14 @@ struct WordleView: View {
     /// Stats are recorded once per date + difficulty, so reopening a
     /// finished past-day board never double-counts it.
     private func recordResultIfNeeded(won: Bool) {
-        let key = "wordle.recorded.\(GameCalendar.key(for: selectedDate)).\(difficulty.rawValue)"
+        let key = "acct.\(AuthManager.currentStorageKey).wordle.recorded.\(GameCalendar.key(for: selectedDate)).\(difficulty.rawValue)"
         guard !UserDefaults.standard.bool(forKey: key) else { return }
         UserDefaults.standard.set(true, forKey: key)
         WordStats.record(difficulty: difficulty, won: won)
+        GameHistory.record(dateKey: GameCalendar.key(for: selectedDate),
+                           game: "Wordle \(difficulty.title)",
+                           detail: won ? "Won in \(guesses.count)" : "Lost — word was \(answer)",
+                           won: won)
     }
 
     /// Loads the board for the selected date + difficulty, restoring any
@@ -180,7 +184,7 @@ struct WordleView: View {
 /// Per-date Wordle progress, keyed "wordle.<yyyy-MM-dd>.<difficulty>".
 enum WordleProgress {
     private static func key(date: Date, difficulty: WordDifficulty) -> String {
-        "wordle.\(GameCalendar.key(for: date)).\(difficulty.rawValue)"
+        "acct.\(AuthManager.currentStorageKey).wordle.\(GameCalendar.key(for: date)).\(difficulty.rawValue)"
     }
     static func load(date: Date, difficulty: WordDifficulty) -> [String] {
         let raw = UserDefaults.standard.string(forKey: key(date: date, difficulty: difficulty)) ?? ""

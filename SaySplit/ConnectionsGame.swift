@@ -226,6 +226,12 @@ struct ConnectionsView: View {
             }
         }
         saveProgress()
+        if finished {
+            GameHistory.record(dateKey: GameCalendar.key(for: selectedDate),
+                               game: "Connections",
+                               detail: won ? "Solved" : "Out of mistakes",
+                               won: won)
+        }
     }
 
     /// Loads the puzzle for the selected date, restoring that date's
@@ -263,7 +269,7 @@ enum ConnectionsProgress {
         let won: Bool
     }
     private static func key(_ field: String, date: Date) -> String {
-        "connections.\(GameCalendar.key(for: date)).\(field)"
+        "acct.\(AuthManager.currentStorageKey).connections.\(GameCalendar.key(for: date)).\(field)"
     }
     static func load(date: Date, puzzle: ConnectionsPuzzle) -> Saved? {
         let d = UserDefaults.standard

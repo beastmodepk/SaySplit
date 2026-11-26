@@ -6,6 +6,7 @@ import SwiftUI
 /// The ‹ › pager goes back to yesterday, the day before, and earlier days;
 /// it never goes into the future, and a "Today" shortcut appears on past days.
 struct ContentView: View {
+    @EnvironmentObject private var auth: AuthManager
     @State private var selectedDate: Date = GameCalendar.today
 
     var body: some View {
@@ -13,11 +14,13 @@ struct ContentView: View {
             DatePagerView(selectedDate: $selectedDate)
             TabView {
                 WordleView(selectedDate: selectedDate)
-                    .id(GameCalendar.key(for: selectedDate))
+                    .id(auth.storageKey + "|" + GameCalendar.key(for: selectedDate))
                     .tabItem { Label("Wordle", systemImage: "square.grid.3x3.fill") }
                 ConnectionsView(selectedDate: selectedDate)
-                    .id(GameCalendar.key(for: selectedDate))
+                    .id(auth.storageKey + "|" + GameCalendar.key(for: selectedDate))
                     .tabItem { Label("Connections", systemImage: "square.grid.2x2.fill") }
+                AccountView()
+                    .tabItem { Label("Account", systemImage: "person.circle") }
             }
         }
     }
