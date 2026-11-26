@@ -165,11 +165,13 @@ struct WordleView: View {
                            game: "Word Trio \(difficulty.title)",
                            detail: won ? "Won in \(guesses.count)" : "Lost — word was \(answer)",
                            won: won)
-        // Finished: today's remaining reminders for this word are cancelled.
-        if let item = ReminderItem(difficulty: difficulty) {
-            ReminderScheduler.cancelRemainingToday(for: item)
-            ReminderScheduler.sync()
+        // When the last unfinished Word Trio level is finished, today's
+        // remaining Word Trio reminders are cancelled; either way re-sync
+        // so later reminders name only the levels still unfinished.
+        if ReminderCompletion.unfinishedWordTrioLevels(on: selectedDate).isEmpty {
+            ReminderScheduler.cancelRemainingToday(for: .wordTrio)
         }
+        ReminderScheduler.sync()
     }
 
     /// Loads the board for the selected date + difficulty, restoring any

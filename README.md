@@ -65,13 +65,15 @@ Playing never requires an account — signed-out play is stored as "guest".
 
 ## Reminders (local notifications, opt-in)
 
-- **OFF by default — all four of them.** On a fresh install no reminder
+- **OFF by default — both of them.** On a fresh install no reminder
   toggle is on, nothing is scheduled, and notification permission is
   never requested until you deliberately turn a toggle on.
-- Four separate toggles in the Account tab's **Reminders** section:
-  Word Trio — Easy, Word Trio — Medium, Word Trio — Hard, and Group Four.
+- Just two toggles in the Account tab's **Reminders** section — one per
+  game: **Word Trio** and **Group Four**. The Word Trio toggle covers
+  all three words (Easy / Medium / Hard) together: its reminder names
+  whichever levels you still have unfinished that day.
 - Enabled reminders fire **3 times a day — 9:00 AM, 1:00 PM, 7:00 PM**
-  local — and only for puzzles you haven't finished. Finishing a puzzle
+  local — and only for games you haven't finished. Finishing a game
   cancels its remaining reminders for that day, and the schedule re-syncs
   whenever the app becomes active (rolling 7-day window, on-device only,
   no server).
@@ -94,10 +96,12 @@ Playing never requires an account — signed-out play is stored as "guest".
 > guest, then Sign in with Apple and confirm your finished games appear
 > under Your history; Sign out and back in. Google/Email buttons are
 > placeholders that explain their pending setup — expected.
-> 5) Account tab → Reminders: confirm all four toggles start OFF. Turn
-> one on (permission is asked only now), leave that puzzle unfinished,
-> and check a reminder arrives at the next of 9:00 AM / 1:00 PM /
-> 7:00 PM; finish the puzzle and confirm its later reminders stop.
+> 5) Account tab → Reminders: confirm both toggles (Word Trio, Group
+> Four) start OFF. Turn Word Trio on (permission is asked only now),
+> leave at least one of today's words unfinished, and check a reminder
+> arrives at the next of 9:00 AM / 1:00 PM / 7:00 PM naming the
+> unfinished levels; finish all three words and confirm its later
+> reminders stop. Same check for Group Four.
 
 ## App Store description (copy-ready)
 
@@ -118,7 +122,7 @@ Playing never requires an account — signed-out play is stored as "guest".
 > • Group Four: daily grouping puzzle (16 words, 4 groups of 4)
 > • Replay any past day with the date pager
 > • Stats, streaks and per-account history
-> • Optional per-puzzle reminders (off by default), 3× a day
+> • Optional per-game reminders (off by default), 3× a day
 > • No account, no ads, no server — everything on-device
 
 ## Build & run
@@ -146,8 +150,9 @@ SaySplit/
                             stubbed), AuthManager, per-account GameHistory
   AccountView.swift         sign-in UI, signed-in state, history, Reminders
                             settings, About
-  Reminders.swift           per-item reminder toggles (all OFF by default),
-                            9AM/1PM/7PM planner, local-notification scheduler
+  Reminders.swift           per-game reminder toggles — Word Trio / Group
+                            Four (both OFF by default), 9AM/1PM/7PM planner,
+                            local-notification scheduler
   SaySplit.entitlements     Sign in with Apple entitlement
   Info.plist / Assets       app info + icon (names kept)
 SaySplitTests/              evaluator, daily/date, progress, auth/history tests
