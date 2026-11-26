@@ -63,6 +63,19 @@ Playing never requires an account — signed-out play is stored as "guest".
   backend configured yet).
 - **Sign out** any time; guest play keeps working.
 
+## Reminders (local notifications, opt-in)
+
+- **OFF by default — all four of them.** On a fresh install no reminder
+  toggle is on, nothing is scheduled, and notification permission is
+  never requested until you deliberately turn a toggle on.
+- Four separate toggles in the Account tab's **Reminders** section:
+  Word Trio — Easy, Word Trio — Medium, Word Trio — Hard, and Group Four.
+- Enabled reminders fire **3 times a day — 9:00 AM, 1:00 PM, 7:00 PM**
+  local — and only for puzzles you haven't finished. Finishing a puzzle
+  cancels its remaining reminders for that day, and the schedule re-syncs
+  whenever the app becomes active (rolling 7-day window, on-device only,
+  no server).
+
 ## Test access (demo mode — no login)
 
 **TestFlight Test Information (copy-ready):**
@@ -81,6 +94,10 @@ Playing never requires an account — signed-out play is stored as "guest".
 > guest, then Sign in with Apple and confirm your finished games appear
 > under Your history; Sign out and back in. Google/Email buttons are
 > placeholders that explain their pending setup — expected.
+> 5) Account tab → Reminders: confirm all four toggles start OFF. Turn
+> one on (permission is asked only now), leave that puzzle unfinished,
+> and check a reminder arrives at the next of 9:00 AM / 1:00 PM /
+> 7:00 PM; finish the puzzle and confirm its later reminders stop.
 
 ## App Store description (copy-ready)
 
@@ -101,6 +118,7 @@ Playing never requires an account — signed-out play is stored as "guest".
 > • Group Four: daily grouping puzzle (16 words, 4 groups of 4)
 > • Replay any past day with the date pager
 > • Stats, streaks and per-account history
+> • Optional per-puzzle reminders (off by default), 3× a day
 > • No account, no ads, no server — everything on-device
 
 ## Build & run
@@ -126,7 +144,10 @@ SaySplit/
   ConnectionsGame.swift     Group Four puzzles, logic, UI, per-date progress
   AuthManager.swift         AuthProvider protocol (Apple live, Google/Email
                             stubbed), AuthManager, per-account GameHistory
-  AccountView.swift         sign-in UI, signed-in state, history, About
+  AccountView.swift         sign-in UI, signed-in state, history, Reminders
+                            settings, About
+  Reminders.swift           per-item reminder toggles (all OFF by default),
+                            9AM/1PM/7PM planner, local-notification scheduler
   SaySplit.entitlements     Sign in with Apple entitlement
   Info.plist / Assets       app info + icon (names kept)
 SaySplitTests/              evaluator, daily/date, progress, auth/history tests

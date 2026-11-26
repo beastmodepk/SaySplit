@@ -164,6 +164,11 @@ struct WordleView: View {
                            game: "Word Trio \(difficulty.title)",
                            detail: won ? "Won in \(guesses.count)" : "Lost — word was \(answer)",
                            won: won)
+        // Finished: today's remaining reminders for this word are cancelled.
+        if let item = ReminderItem(difficulty: difficulty) {
+            ReminderScheduler.cancelRemainingToday(for: item)
+            ReminderScheduler.sync()
+        }
     }
 
     /// Loads the board for the selected date + difficulty, restoring any

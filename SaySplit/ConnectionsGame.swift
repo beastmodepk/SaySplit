@@ -231,6 +231,9 @@ struct ConnectionsView: View {
                                game: "Group Four",
                                detail: won ? "Solved" : "Out of mistakes",
                                won: won)
+            // Finished: today's remaining Group Four reminders are cancelled.
+            ReminderScheduler.cancelRemainingToday(for: .groupFour)
+            ReminderScheduler.sync()
         }
     }
 

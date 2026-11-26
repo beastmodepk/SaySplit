@@ -9,6 +9,10 @@ struct AccountView: View {
     @State private var pendingProvider: String?
     @State private var showPendingAlert = false
     @State private var history: [GameHistoryEntry] = []
+    @State private var easyReminderOn = false
+    @State private var mediumReminderOn = false
+    @State private var hardReminderOn = false
+    @State private var groupFourReminderOn = false
 
     var body: some View {
         NavigationStack {
@@ -27,12 +31,21 @@ struct AccountView: View {
 
                     historySection
 
+                    notificationsSection
+
                     aboutSection
                 }
                 .padding(16)
             }
             .navigationTitle("Account")
-            .onAppear { refreshHistory() }
+            .onAppear {
+                refreshHistory()
+                loadReminderToggles()
+            }
+            .onChange(of: easyReminderOn) { _, on in applyReminderToggle(.easy, on) }
+            .onChange(of: mediumReminderOn) { _, on in applyReminderToggle(.medium, on) }
+            .onChange(of: hardReminderOn) { _, on in applyReminderToggle(.hard, on) }
+            .onChange(of: groupFourReminderOn) { _, on in applyReminderToggle(.groupFour, on) }
             .alert("Sign-in coming soon", isPresented: $showPendingAlert) {
                 Button("OK", role: .cancel) { }
             } message: {
@@ -106,6 +119,50 @@ struct AccountView: View {
                 .background(Color.gray.opacity(0.12))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             }
+        }
+    }
+
+    // MARK: - Notifications
+
+    private var notificationsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Reminders")
+                .font(.title3.bold())
+            Text("Reminders are OFF by default. Turn on the ones you want and we'll nudge you 3 times a day — 9:00 AM, 1:00 PM and 7:00 PM — only for puzzles you haven't finished yet.")
+                .font(.subheadline)
+                .foregroundStyle(Color.secondary)
+
+            VStack(spacing: 0) {
+                ReminderToggleRow(label: ReminderItem.easy.toggleLabel, isOn: $easyReminderOn)
+                Divider()
+                ReminderToggleRow(label: ReminderItem.medium.toggleLabel, isOn: $mediumReminderOn)
+                Divider()
+                ReminderToggleRow(label: ReminderItem.hard.toggleLabel, isOn: $hardReminderOn)
+                Divider()
+                ReminderToggleRow(label: ReminderItem.groupFour.toggleLabel, isOn: $groupFourReminderOn)
+            }
+            .padding(.horizontal, 12)
+            .background(Color.gray.opacity(0.12))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+
+    private func loadReminderToggles() {
+        easyReminderOn = ReminderSettings.isEnabled(.easy)
+        mediumReminderOn = ReminderSettings.isEnabled(.medium)
+        hardReminderOn = ReminderSettings.isEnabled(.hard)
+        groupFourReminderOn = ReminderSettings.isEnabled(.groupFour)
+    }
+
+    /// Turning a toggle ON is the only moment notification permission is
+    /// ever requested. Turning one OFF just re-syncs the schedule.
+    private func applyReminderToggle(_ item: ReminderItem, _ on: Bool) {
+        guard ReminderSettings.isEnabled(item) != on else { return }
+        ReminderSettings.setEnabled(item, on)
+        if on {
+            ReminderScheduler.requestPermissionThenSync()
+        } else {
+            ReminderScheduler.sync()
         }
     }
 
@@ -213,6 +270,23 @@ private struct SecondarySignInButton: View {
         }
         .background(Color.gray.opacity(0.15))
         .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+
+// MARK: - Reminder toggle row
+
+private struct ReminderToggleRow: View {
+    let label: String
+    @Binding var isOn: Bool
+
+    var body: some View {
+        HStack {
+            Text(label).font(.body)
+            Spacer()
+            Toggle("", isOn: $isOn)
+                .labelsHidden()
+        }
+        .padding(.vertical, 8)
     }
 }
 
