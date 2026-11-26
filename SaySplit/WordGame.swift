@@ -69,7 +69,7 @@ enum WordLists {
         "APPLE","HOUSE","WATER","LIGHT","MUSIC","HAPPY","SMILE","BEACH","CHAIR","TABLE",
         "BREAD","HEART","WORLD","DREAM","GREEN","PIZZA","TIGER","LEMON","PEACH","GRAPE",
         "PLANT","RIVER","OCEAN","CLOUD","RAINY","SUNNY","PARTY","CANDY","LUCKY","SMART",
-        "BOOKS","GAMES","MOVIE","DANCE","SWEET","QUICK","BRAVE","LEARN","FRIEND","SCHOOL"
+        "BOOKS","GAMES","MOVIE","DANCE","SWEET","QUICK","BRAVE","LEARN","PLAYS","CLASS"
     ]
     static let mediumAnswers: [String] = [
         "CRANE","SLATE","AUDIO","ROATE","ADIEU","STARE","TEARS","RINSE","OPERA","ARISE",

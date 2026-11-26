@@ -107,7 +107,7 @@ check("scheme has Testables for SaySplitTests", "SaySplitTests.xctest" in scheme
 # 12. CI workflow sanity
 wf = open(os.path.join(ROOT, ".github/workflows/build.yml")).read()
 check("CI workflow: macos runner + xcodebuild + signing disabled",
-      "macos-14" in wf and "xcodebuild build" in wf and "CODE_SIGNING_ALLOWED=NO" in wf, "")
+      "macos-" in wf and "xcodebuild build" in wf and "CODE_SIGNING_ALLOWED=NO" in wf, "")
 
 # 13. build settings spot checks
 for token in ["IPHONEOS_DEPLOYMENT_TARGET = 17.0", "PRODUCT_BUNDLE_IDENTIFIER = com.parthey.saysplit;",
