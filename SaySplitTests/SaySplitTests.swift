@@ -53,6 +53,22 @@ final class SaySplitTests: XCTestCase {
         XCTAssertTrue(WordLists.isValidGuess("earth"))
     }
 
+    func testCommonWordsAlwaysValid() {
+        // Must-pass common words (EARTH and TREAD were both rejected by
+        // Build 91's tiny hand-typed list). Cross-checked against the
+        // google-10000-english frequency list and wordfreq's top 10,000:
+        // every ordinary 5-letter English word in them validates; the
+        // only non-validating entries in those lists are proper nouns,
+        // brands and apostrophe-less contractions, which stay out.
+        let mustPass = ["EARTH", "TREAD", "AUDIO", "HEART", "WORLD", "PLANT", "BRAVE",
+                        "WATER", "HOUSE", "LIGHT", "SOUND", "POINT", "THING", "STORY",
+                        "LEARN", "WRITE", "SPEAK", "WATCH", "YOUNG", "CLEAN", "DIRTY",
+                        "HAPPY", "QUICK", "MOIST", "CRANE", "SLATE", "ADIEU"]
+        for w in mustPass {
+            XCTAssertTrue(WordLists.isValidGuess(w), "\(w) must be a valid guess")
+        }
+    }
+
     func testDictionarySampleWordsValidate() {
         for w in ["AUDIO", "CRANE", "SLATE", "HEART", "WORLD", "PLANT", "BRAVE", "MOIST", "FJORD", "JAZZY", "TRAIL", "STARE"] {
             XCTAssertTrue(WordLists.isValidGuess(w), "\(w) should validate")
