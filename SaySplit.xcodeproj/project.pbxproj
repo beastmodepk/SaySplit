@@ -240,6 +240,7 @@
 				D20000000000000000000014 /* PaymentsComingSoonView.swift in Sources */,
 				D20000000000000000000015 /* WordGame.swift in Sources */,
 				D20000000000000000000016 /* WordleView.swift in Sources */,
+				D20000000000000000000017 /* ConnectionsGame.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
