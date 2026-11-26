@@ -159,7 +159,7 @@ struct ConnectionsView: View {
                     ForEach(solved) { group in
                         VStack(spacing: 2) {
                             Text(group.category).font(.headline)
-                            Text(group.words.joined(separator: ", ")).font(.subheadline)
+                            Text(group.words.joined(separator: ", ")).font(.headline)
                         }
                         .frame(maxWidth: .infinity)
                         .padding(10)
@@ -170,7 +170,9 @@ struct ConnectionsView: View {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 4), spacing: 8) {
                         ForEach(remaining, id: \.self) { word in
                             Button(word) { toggle(word) }
-                                .font(.system(size: 14, weight: .bold))
+                                .font(.system(size: 18, weight: .bold))
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.75)
                                 .frame(maxWidth: .infinity, minHeight: 72)
                                 .background(selected.contains(word) ? Color.gray.opacity(0.7) : Color.gray.opacity(0.18))
                                 .foregroundStyle(selected.contains(word) ? Color.white : Color.primary)
