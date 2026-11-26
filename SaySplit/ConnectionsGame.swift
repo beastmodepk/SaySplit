@@ -173,7 +173,7 @@ struct ConnectionsView: View {
                                 .font(.system(size: 13, weight: .bold))
                                 .frame(maxWidth: .infinity, minHeight: 64)
                                 .background(selected.contains(word) ? Color.gray.opacity(0.7) : Color.gray.opacity(0.18))
-                                .foregroundStyle(selected.contains(word) ? .white : .primary)
+                                .foregroundStyle(selected.contains(word) ? Color.white : Color.primary)
                                 .cornerRadius(8)
                         }
                     }

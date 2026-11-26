@@ -96,7 +96,7 @@ struct WordleView: View {
             .frame(width: 52, height: 52)
             .font(.title2.bold())
             .background(color(for: state))
-            .foregroundStyle(state == .unknown ? .primary : .white)
+            .foregroundStyle(state == .unknown ? Color.primary : Color.white)
             .border(Color.secondary.opacity(0.4))
             .cornerRadius(4)
     }
@@ -118,12 +118,7 @@ struct WordleView: View {
                         Button("ENTER") { submit() }.buttonStyle(.bordered).font(.caption.bold())
                     }
                     ForEach(Array(row), id: \.self) { ch in
-                        Button(String(ch)) { tap(ch) }
-                            .frame(minWidth: 28, minHeight: 44)
-                            .background(color(for: keyboardStates[ch] ?? .unknown).opacity(keyboardStates[ch] == nil ? 0.15 : 1))
-                            .foregroundStyle(keyboardStates[ch] == nil ? .primary : .white)
-                            .cornerRadius(4)
-                            .font(.headline)
+                        WordleKeyView(letter: ch, state: keyboardStates[ch]) { tap(ch) }
                     }
                     if row == "ZXCVBNM" {
                         Button("⌫") { deleteLetter() }.buttonStyle(.bordered)
@@ -193,5 +188,37 @@ enum WordleProgress {
     }
     static func save(guesses: [String], date: Date, difficulty: WordDifficulty) {
         UserDefaults.standard.set(guesses.joined(separator: ","), forKey: key(date: date, difficulty: difficulty))
+    }
+}
+
+/// One keyboard key, extracted into its own View so the compiler does not
+/// have to type-check the whole keyboard expression inline (CI fix).
+struct WordleKeyView: View {
+    let letter: Character
+    let state: LetterState?
+    let action: () -> Void
+
+    private var backgroundColor: Color {
+        switch state {
+        case .correct: return Color.green
+        case .present: return Color.yellow.opacity(0.85)
+        case .absent: return Color.gray
+        case nil, .unknown: return Color.gray.opacity(0.15)
+        }
+    }
+    private var foregroundColor: Color {
+        state == nil ? Color.primary : Color.white
+    }
+
+    var body: some View {
+        let label = String(letter)
+        Button(action: action) {
+            Text(label)
+                .frame(minWidth: 28, minHeight: 44)
+                .background(backgroundColor)
+                .foregroundStyle(foregroundColor)
+                .cornerRadius(4)
+                .font(.headline)
+        }
     }
 }
