@@ -1,8 +1,18 @@
-# SaySplit — TestFlight publishing
+# Word Games — TestFlight publishing
+
+The app is **Word Games** (three Wordle-style words a day — Easy/Medium/
+Hard — plus a daily Connections-style puzzle, a date pager for past days,
+and optional Sign in with Apple for per-account history). It ships through
+the shell of a retired app, so the project/scheme/bundle below keep their
+technical names until Parthey renames them.
 
 Pipeline: merge to `main` → `.github/workflows/release.yml` (macos-26,
 Xcode 26, unsigned archive → distribution signing at export) → TestFlight.
 Same house standard as My Work Spots (proven 2026-11-18).
+
+**What to test:** see the copy-ready "What to Test" text in `README.md`
+(Wordle Easy/Medium/Hard, date pager back to yesterday, Connections,
+guest play vs Apple sign-in history).
 
 ## Owner gates (Parthey, one-time for this app)
 

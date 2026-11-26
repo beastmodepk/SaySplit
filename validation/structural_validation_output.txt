@@ -1,13 +1,13 @@
 PASS  no conflict markers  []
-PASS  pbxproj: every object defined exactly once (duplicate-definition check)  53 definitions, 53 unique, dups={}
-PASS  pbxproj: no dangling references  53 distinct ids referenced, dangling=set()
-PASS  pbxproj: balanced braces  {=66 }=66
+PASS  pbxproj: every object defined exactly once (duplicate-definition check)  66 definitions, 66 unique, dups={}
+PASS  pbxproj: no dangling references  66 distinct ids referenced, dangling=set()
+PASS  pbxproj: balanced braces  {=79 }=79
 PASS  pbxproj: balanced parens  (=35 )=35
-PASS  pbxproj: group listings hold references only  47 child entries
-PASS  pbxproj: every referenced file exists on disk  16 file refs, missing=[]
-PASS  swift file set in project == on disk  project=['CommandParser.swift', 'ContentView.swift', 'CoreLogic.swift', 'ExpenseEntryViews.swift', 'GroupDetailView.swift', 'ImportExportViews.swift', 'Models.swift', 'SaySplitApp.swift', 'SaySplitTests.swift', 'SpeechRecognizer.swift', 'SplitwiseCSV.swift', 'Store.swift'] disk=['CommandParser.swift', 'ContentView.swift', 'CoreLogic.swift', 'ExpenseEntryViews.swift', 'GroupDetailView.swift', 'ImportExportViews.swift', 'Models.swift', 'SaySplitApp.swift', 'SaySplitTests.swift', 'SpeechRecognizer.swift', 'SplitwiseCSV.swift', 'Store.swift']
+PASS  pbxproj: group listings hold references only  60 child entries
+PASS  pbxproj: every referenced file exists on disk  23 file refs, missing=[]
+PASS  swift file set in project == on disk  project=['AccountView.swift', 'AuthManager.swift', 'CommandParser.swift', 'ConnectionsGame.swift', 'ContentView.swift', 'CoreLogic.swift', 'ExpenseEntryViews.swift', 'GroupDetailView.swift', 'ImportExportViews.swift', 'Models.swift', 'PaymentsComingSoonView.swift', 'SaySplitApp.swift', 'SaySplitTests.swift', 'SpeechRecognizer.swift', 'SplitwiseCSV.swift', 'Store.swift', 'WordGame.swift', 'WordleView.swift'] disk=['AccountView.swift', 'AuthManager.swift', 'CommandParser.swift', 'ConnectionsGame.swift', 'ContentView.swift', 'CoreLogic.swift', 'ExpenseEntryViews.swift', 'GroupDetailView.swift', 'ImportExportViews.swift', 'Models.swift', 'PaymentsComingSoonView.swift', 'SaySplitApp.swift', 'SaySplitTests.swift', 'SpeechRecognizer.swift', 'SplitwiseCSV.swift', 'Store.swift', 'WordGame.swift', 'WordleView.swift']
 PASS  swift files: brace/paren/bracket balance  []
-PASS  Info.plist parses (plistlib)  15 keys
+PASS  Info.plist parses (plistlib)  16 keys
 PASS  Info.plist: NSMicrophoneUsageDescription present  
 PASS  Info.plist: NSSpeechRecognitionUsageDescription present  
 PASS  asset catalog Contents.json files parse as JSON  3 files

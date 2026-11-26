@@ -58,6 +58,11 @@ struct AccountView: View {
                     }
                 }
 
+                Section("About") {
+                    Text("Word Games — a daily word game with three Wordle-style words a day (Easy, Medium, Hard) and a daily Connections-style puzzle. Replay past days, sign in to keep your history.")
+                        .font(.subheadline)
+                }
+
                 Section("Your history") {
                     if history.isEmpty {
                         Text("No finished games yet for this account. Finish a Wordle or Connections board and it will be logged here.")
