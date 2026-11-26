@@ -200,4 +200,57 @@ final class SaySplitTests: XCTestCase {
         let entries = GameHistory.entries()
         XCTAssertTrue(entries.contains { $0.dateKey == "2026-11-25" && $0.game == "Word Trio Easy" && $0.won })
     }
+
+    // MARK: - Reminders (all OFF by default, opt-in only)
+
+    /// Fresh-install state: no keys present = every toggle off, nothing
+    /// enabled, and the planner schedules nothing.
+    func testRemindersDefaultOff() {
+        for item in ReminderItem.allCases {
+            UserDefaults.standard.removeObject(forKey: "reminders.enabled.\(item.rawValue)")
+        }
+        for item in ReminderItem.allCases {
+            XCTAssertFalse(ReminderSettings.isEnabled(item), "\(item) must default to OFF")
+        }
+        XCTAssertTrue(ReminderSettings.enabledItems.isEmpty)
+        XCTAssertFalse(ReminderSettings.anyEnabled)
+        let planned = ReminderPlanner.plan(now: Date(), enabled: ReminderSettings.enabledItems) { _, _ in false }
+        XCTAssertTrue(planned.isEmpty)
+    }
+
+    /// Finished item → no reminders; unfinished + enabled → 3 per day.
+    func testPlannerFinishedItemGetsNone() {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        let now = cal.date(from: DateComponents(year: 2026, month: 11, day: 26, hour: 8))!
+        let planned = ReminderPlanner.plan(now: now, calendar: cal, enabled: Set(ReminderItem.allCases)) { item, _ in
+            item == .easy // Easy is finished every day
+        }
+        XCTAssertFalse(planned.contains { $0.item == .easy })
+        // 3 unfinished items × 3 times × 7 days.
+        XCTAssertEqual(planned.count, 3 * 3 * 7)
+        let hours = Set(planned.map { cal.component(.hour, from: $0.fireDate) })
+        XCTAssertEqual(hours, Set([9, 13, 19]))
+    }
+
+    /// Disabled item → no reminders for it, even when unfinished.
+    func testPlannerDisabledItemGetsNone() {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        let now = cal.date(from: DateComponents(year: 2026, month: 11, day: 26, hour: 8))!
+        let planned = ReminderPlanner.plan(now: now, calendar: cal, enabled: [.groupFour]) { _, _ in false }
+        XCTAssertTrue(planned.allSatisfy { $0.item == .groupFour })
+        XCTAssertEqual(planned.count, 3 * 7)
+    }
+
+    /// Times already past today are skipped; later days keep all 3.
+    func testPlannerSkipsPastTimesToday() {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        let now = cal.date(from: DateComponents(year: 2026, month: 11, day: 26, hour: 14))!
+        let planned = ReminderPlanner.plan(now: now, calendar: cal, enabled: [.easy]) { _, _ in false }
+        // Today: only 19:00 remains (1). Six more days × 3 = 18. Total 19.
+        XCTAssertEqual(planned.count, 19)
+        XCTAssertTrue(planned.allSatisfy { $0.fireDate > now })
+    }
 }
