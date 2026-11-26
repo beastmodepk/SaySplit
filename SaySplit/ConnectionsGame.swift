@@ -170,8 +170,8 @@ struct ConnectionsView: View {
                     LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 4), spacing: 8) {
                         ForEach(remaining, id: \.self) { word in
                             Button(word) { toggle(word) }
-                                .font(.system(size: 13, weight: .bold))
-                                .frame(maxWidth: .infinity, minHeight: 64)
+                                .font(.system(size: 14, weight: .bold))
+                                .frame(maxWidth: .infinity, minHeight: 72)
                                 .background(selected.contains(word) ? Color.gray.opacity(0.7) : Color.gray.opacity(0.18))
                                 .foregroundStyle(selected.contains(word) ? Color.white : Color.primary)
                                 .cornerRadius(8)

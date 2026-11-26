@@ -93,12 +93,13 @@ struct WordleView: View {
             state = .unknown
         }
         return Text(letter)
-            .frame(width: 52, height: 52)
-            .font(.title2.bold())
+            .frame(maxWidth: .infinity)
+            .aspectRatio(1, contentMode: .fit)
+            .font(.title.bold())
             .background(color(for: state))
             .foregroundStyle(state == .unknown ? Color.primary : Color.white)
             .border(Color.secondary.opacity(0.4))
-            .cornerRadius(4)
+            .cornerRadius(6)
     }
 
     private func color(for state: LetterState) -> Color {
@@ -111,17 +112,17 @@ struct WordleView: View {
     }
 
     private var keyboard: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: 7) {
             ForEach(rows, id: \.self) { row in
-                HStack(spacing: 4) {
+                HStack(spacing: 5) {
                     if row == "ZXCVBNM" {
-                        Button("ENTER") { submit() }.buttonStyle(.bordered).font(.caption.bold())
+                        WordleSpecialKeyView(title: "ENTER", tint: Color.green) { submit() }
                     }
                     ForEach(Array(row), id: \.self) { ch in
                         WordleKeyView(letter: ch, state: keyboardStates[ch]) { tap(ch) }
                     }
                     if row == "ZXCVBNM" {
-                        Button("⌫") { deleteLetter() }.buttonStyle(.bordered)
+                        WordleSpecialKeyView(title: "⌫", tint: Color.green) { deleteLetter() }
                     }
                 }
             }
@@ -218,11 +219,29 @@ struct WordleKeyView: View {
         let label = String(letter)
         Button(action: action) {
             Text(label)
-                .frame(minWidth: 28, minHeight: 44)
+                .frame(maxWidth: .infinity, minHeight: 54)
                 .background(backgroundColor)
                 .foregroundStyle(foregroundColor)
-                .cornerRadius(4)
-                .font(.headline)
+                .cornerRadius(6)
+                .font(.title3.bold())
+        }
+    }
+}
+
+/// ENTER / delete keys: same height and style as the letter keys, wider.
+struct WordleSpecialKeyView: View {
+    let title: String
+    let tint: Color
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .frame(width: 58, height: 54)
+                .background(Color.gray.opacity(0.15))
+                .foregroundStyle(tint)
+                .cornerRadius(6)
+                .font(.subheadline.bold())
         }
     }
 }
