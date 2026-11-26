@@ -105,7 +105,7 @@ final class SaySplitTests: XCTestCase {
         }
     }
 
-    // MARK: - Connections
+    // MARK: - Group Four
 
     func testConnectionsPuzzlesWellFormed() {
         XCTAssertGreaterThanOrEqual(ConnectionsPuzzles.all.count, 14)
@@ -196,8 +196,8 @@ final class SaySplitTests: XCTestCase {
 
     func testGuestStorageKeyAndHistoryRoundTrip() {
         XCTAssertEqual(AuthManager.currentStorageKey, "guest")
-        GameHistory.record(dateKey: "2026-11-25", game: "Wordle Easy", detail: "Won in 3", won: true)
+        GameHistory.record(dateKey: "2026-11-25", game: "Word Trio Easy", detail: "Won in 3", won: true)
         let entries = GameHistory.entries()
-        XCTAssertTrue(entries.contains { $0.dateKey == "2026-11-25" && $0.game == "Wordle Easy" && $0.won })
+        XCTAssertTrue(entries.contains { $0.dateKey == "2026-11-25" && $0.game == "Word Trio Easy" && $0.won })
     }
 }

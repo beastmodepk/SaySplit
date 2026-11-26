@@ -1,9 +1,9 @@
 import Foundation
 
 // Word Games — full 5-letter guess dictionary.
-// Source: the Wordle allowed-guess word list mirrored at
-// github.com/tabatkins/wordle-list (itself derived from the public
-// Wordle game data), cross-checked against dwyl/english-words,
+// Source: an open public five-letter allowed-guess list
+// (github.com/tabatkins/wordle-list), cross-checked against
+// dwyl/english-words and the google-10000-english frequency list,
 // filtered to exactly 5 letters A-Z, uppercase, deduplicated, sorted,
 // and unioned with every answer-bank word so an answer is always a
 // legal guess. Stored as one space-joined string (not an array

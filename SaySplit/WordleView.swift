@@ -60,7 +60,7 @@ struct WordleView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Wordle")
+            .navigationTitle("Word Trio")
             .onAppear { loadGame() }
         }
     }
@@ -161,7 +161,7 @@ struct WordleView: View {
         UserDefaults.standard.set(true, forKey: key)
         WordStats.record(difficulty: difficulty, won: won)
         GameHistory.record(dateKey: GameCalendar.key(for: selectedDate),
-                           game: "Wordle \(difficulty.title)",
+                           game: "Word Trio \(difficulty.title)",
                            detail: won ? "Won in \(guesses.count)" : "Lost — word was \(answer)",
                            won: won)
     }
@@ -182,7 +182,7 @@ struct WordleView: View {
     }
 }
 
-/// Per-date Wordle progress, keyed "wordle.<yyyy-MM-dd>.<difficulty>".
+/// Per-date Word Trio progress, keyed "wordle.<yyyy-MM-dd>.<difficulty>".
 enum WordleProgress {
     private static func key(date: Date, difficulty: WordDifficulty) -> String {
         "acct.\(AuthManager.currentStorageKey).wordle.\(GameCalendar.key(for: date)).\(difficulty.rawValue)"

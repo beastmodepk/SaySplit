@@ -59,13 +59,13 @@ struct AccountView: View {
                 }
 
                 Section("About") {
-                    Text("Word Games — a daily word game with three Wordle-style words a day (Easy, Medium, Hard) and a daily Connections-style puzzle. Replay past days, sign in to keep your history.")
+                    Text("Word Games — two daily word games in one app. Word Trio: guess the five-letter word, three new words a day (Easy, Medium, Hard). Group Four: sort sixteen words into four groups of four. Replay past days, sign in to keep your history.")
                         .font(.subheadline)
                 }
 
                 Section("Your history") {
                     if history.isEmpty {
-                        Text("No finished games yet for this account. Finish a Wordle or Connections board and it will be logged here.")
+                        Text("No finished games yet for this account. Finish a Word Trio or Group Four board and it will be logged here.")
                             .font(.subheadline).foregroundStyle(.secondary)
                     } else {
                         ForEach(history) { entry in

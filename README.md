@@ -2,9 +2,10 @@
 
 **Two daily word games in one app.**
 
-> **Word Games** — a daily word game with three Wordle-style words a day
-> (Easy, Medium, Hard) and a daily Connections-style puzzle. Replay past
-> days, sign in to keep your history.
+> **Word Games** — two daily word games in one app. **Word Trio**:
+> guess the five-letter word — three new words a day (Easy, Medium,
+> Hard). **Group Four**: sort sixteen words into four groups of four.
+> Replay past days, sign in to keep your history.
 
 This app lives in the shell of a retired app Parthey replaced on
 2026-11-26. He will rename the repo / app himself later; until then the
@@ -14,14 +15,14 @@ names are plumbing only and say nothing about what the app does.
 
 ## The games
 
-### Wordle-style — 3 words a day, not one
+### Word Trio — five letters, 3 words a day, not one
 - Every day has **three words: Easy, Medium and Hard**, each with its own
   board, 6 guesses, 5-letter grid and on-screen keyboard
   (green / yellow / gray, with correct duplicate-letter handling).
 - Win/lose state with the answer revealed on a loss, plus per-difficulty
   stats and streaks.
 
-### Connections-style — daily grouping
+### Group Four — daily grouping
 - 16 words, **4 groups of 4**, each group with a category name and a
   difficulty colour (yellow / green / blue / purple).
 - Select 4 → Submit; Shuffle and Deselect included; "One away!" hint;
@@ -36,11 +37,13 @@ names are plumbing only and say nothing about what the app does.
 - Each date has its own puzzles and its own saved progress.
 
 ### How the daily puzzles are chosen
-Deterministic by date, on-device: the Wordle word for a difficulty is
-picked from that difficulty's word list by the day number (days since
-1970 × 31 + a per-difficulty offset, modulo the list size — 40 Easy /
-40 Medium / 36 Hard answers, plus a larger valid-guess list). The
-Connections board is the day number modulo the 14 built-in puzzles.
+Deterministic by date, on-device: the Word Trio word for a difficulty
+is picked from that difficulty's answer bank by the day number (days
+since 1970 × 31 + a per-difficulty offset, modulo the bank size —
+300 Easy / 300 Medium / 200 Hard answers, all drawn from a 14,896-word
+guess dictionary, so ordinary words like EARTH and TREAD always
+validate). The Group Four board is the day number modulo the 14
+built-in puzzles.
 Same date → same puzzles, on every device, with no server.
 
 ## Sign in & history (optional)
@@ -63,17 +66,17 @@ Playing never requires an account — signed-out play is stored as "guest".
 ## Test access (demo mode — no login)
 
 **TestFlight Test Information (copy-ready):**
-> No account needed — open app, Wordle tab has 3 daily words
-> Easy/Medium/Hard, Connections tab is the grouping game. Use the date
+> No account needed — open app, the Word Trio tab has 3 daily words
+> Easy/Medium/Hard, the Group Four tab is the grouping game. Use the date
 > pager at the top to replay yesterday or earlier days. Optional:
 > Account tab → Sign in with Apple to keep history under your account
 > (Google/Email sign-in not configured yet).
 
 **What to Test (copy-ready):**
-> 1) Wordle tab: play today's Easy, Medium and Hard words (6 guesses
-> each). 2) Tap ‹ at the top to play yesterday's words and Connections
+> 1) Word Trio tab: play today's Easy, Medium and Hard words (6 guesses
+> each). 2) Tap ‹ at the top to play yesterday's words and Group Four
 > board; check the › arrow is greyed out on today and a "Today" shortcut
-> appears on past days. 3) Connections tab: select 4 words and Submit —
+> appears on past days. 3) Group Four tab: select 4 words and Submit —
 > try Shuffle/Deselect and the "One away!" hint. 4) Account tab: play as
 > guest, then Sign in with Apple and confirm your finished games appear
 > under Your history; Sign out and back in. Google/Email buttons are
@@ -81,21 +84,21 @@ Playing never requires an account — signed-out play is stored as "guest".
 
 ## App Store description (copy-ready)
 
-> **Word Games — 3 Wordle-style words a day + a daily Connections puzzle**
+> **Word Games — Word Trio (3 words a day) + Group Four (daily grouping)**
 >
-> Why stop at one word a day? Word Games gives you THREE new
-> Wordle-style words every day — Easy, Medium and Hard — each with six
+> Why stop at one word a day? Word Trio gives you THREE new five-letter
+> words to guess every day — Easy, Medium and Hard — each with six
 > guesses, a colour-coded keyboard and streaks to chase. Then switch
-> tabs for the daily Connections-style puzzle: sixteen words, four
-> hidden groups, four mistakes.
+> tabs for Group Four: sixteen words, four hidden groups of four,
+> four mistakes.
 >
 > Missed a day? The date pager at the top lets you go back and play
 > yesterday's — or any earlier day's — puzzles, each with its own saved
 > progress. Sign in with Apple (optional — never required to play) to
 > keep your stats and history under your account.
 >
-> • 3 Wordle-style words daily: Easy, Medium, Hard
-> • Daily Connections-style grouping puzzle (16 words, 4 groups)
+> • Word Trio: 3 five-letter words daily — Easy, Medium, Hard
+> • Group Four: daily grouping puzzle (16 words, 4 groups of 4)
 > • Replay any past day with the date pager
 > • Stats, streaks and per-account history
 > • No account, no ads, no server — everything on-device
@@ -116,11 +119,11 @@ Playing never requires an account — signed-out play is stored as "guest".
 ```
 SaySplit/
   SaySplitApp.swift         @main entry (name kept); owns AuthManager
-  ContentView.swift         date pager + TabView: Wordle / Connections / Account
+  ContentView.swift         date pager + TabView: Word Trio / Group Four / Account
   WordGame.swift            word logic, evaluator, daily provider, word lists,
                             stats, GameCalendar (date pager helpers)
-  WordleView.swift          Wordle UI: grid + keyboard, per-date progress
-  ConnectionsGame.swift     Connections puzzles, logic, UI, per-date progress
+  WordleView.swift          Word Trio UI: grid + keyboard, per-date progress
+  ConnectionsGame.swift     Group Four puzzles, logic, UI, per-date progress
   AuthManager.swift         AuthProvider protocol (Apple live, Google/Email
                             stubbed), AuthManager, per-account GameHistory
   AccountView.swift         sign-in UI, signed-in state, history, About

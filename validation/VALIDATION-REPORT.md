@@ -9,7 +9,7 @@ compile and unit tests run in GitHub Actions (macOS-26, Xcode 26).**
 - Logic cross-checks (script simulation of the Swift code): word
   evaluator incl. duplicate-letter cases, word-list well-formedness,
   daily-word validity over 60 days × 3 difficulties, and all 14
-  Connections puzzles (16 unique words, levels 0–3) — all PASS.
+  Group Four puzzles (16 unique words, levels 0–3) — all PASS.
   See `validation/TRACE.md`.
 - Known prior CI failure (push dc706ab, exit 65) was traced to three
   WordleView.swift errors (ShapeStyle/Color ternary mix + a keyboard

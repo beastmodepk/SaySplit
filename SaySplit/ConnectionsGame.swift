@@ -192,7 +192,7 @@ struct ConnectionsView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Connections")
+            .navigationTitle("Group Four")
             .onAppear { loadGame() }
         }
     }
@@ -228,7 +228,7 @@ struct ConnectionsView: View {
         saveProgress()
         if finished {
             GameHistory.record(dateKey: GameCalendar.key(for: selectedDate),
-                               game: "Connections",
+                               game: "Group Four",
                                detail: won ? "Solved" : "Out of mistakes",
                                won: won)
         }
@@ -258,7 +258,7 @@ struct ConnectionsView: View {
     }
 }
 
-/// Per-date Connections progress, keyed "connections.<yyyy-MM-dd>.*".
+/// Per-date Group Four progress, keyed "connections.<yyyy-MM-dd>.*".
 /// Solved groups are stored by category name and re-matched to the date's puzzle.
 enum ConnectionsProgress {
     struct Saved {

@@ -1,6 +1,6 @@
 import Foundation
 
-// Word Games — Wordle-style logic and data.
+// Word Games — Word Trio logic and data.
 // Test access: demo mode, no login/account needed.
 
 enum WordDifficulty: String, CaseIterable, Identifiable {

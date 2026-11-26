@@ -102,7 +102,7 @@ final class AuthManager: ObservableObject {
 struct GameHistoryEntry: Codable, Identifiable {
     var id: String { "\(dateKey)|\(game)|\(detail)" }
     let dateKey: String   // "2026-11-26"
-    let game: String      // "Wordle Easy" / "Connections"
+    let game: String      // "Word Trio Easy" / "Group Four"
     let detail: String    // "Won in 4" / "Lost — word was CRANE" / "Solved"
     let won: Bool
 }

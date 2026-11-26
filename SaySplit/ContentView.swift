@@ -1,8 +1,8 @@
 import SwiftUI
 
 /// Word Games root: two games in one app, with a date pager at the top.
-/// TestFlight Test Information: No account needed — open app, Wordle tab has
-/// 3 daily words Easy/Medium/Hard, Connections tab is the grouping game.
+/// TestFlight Test Information: No account needed — open app, the Word Trio
+/// tab has 3 daily words Easy/Medium/Hard, the Group Four tab is the grouping game.
 /// The ‹ › pager goes back to yesterday, the day before, and earlier days;
 /// it never goes into the future, and a "Today" shortcut appears on past days.
 struct ContentView: View {
@@ -15,10 +15,10 @@ struct ContentView: View {
             TabView {
                 WordleView(selectedDate: selectedDate)
                     .id(auth.storageKey + "|" + GameCalendar.key(for: selectedDate))
-                    .tabItem { Label("Wordle", systemImage: "square.grid.3x3.fill") }
+                    .tabItem { Label("Word Trio", systemImage: "square.grid.3x3.fill") }
                 ConnectionsView(selectedDate: selectedDate)
                     .id(auth.storageKey + "|" + GameCalendar.key(for: selectedDate))
-                    .tabItem { Label("Connections", systemImage: "square.grid.2x2.fill") }
+                    .tabItem { Label("Group Four", systemImage: "square.grid.2x2.fill") }
                 AccountView()
                     .tabItem { Label("Account", systemImage: "person.circle") }
             }
