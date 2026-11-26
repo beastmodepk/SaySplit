@@ -112,20 +112,9 @@ enum WordLists {
         (easyAnswers + mediumAnswers + hardAnswers).map { $0.uppercased() }
     }
     static var validGuesses: Set<String> {
-        var set = Set(allAnswers)
-        let extra = [
-            "ABOUT","ABOVE","ACTOR","ACUTE","ADMIT","ADOPT","ADORE","ADULT","AFTER","AGAIN",
-            "AGENT","AGREE","AHEAD","ALARM","ALBUM","ALERT","ALIKE","ALIVE","ALLOW","ALLY",
-            "ALOUD","ALPHA","ALSO","ALTER","ALWAYS","AMBER","AMEND","AMONG","ANGEL","ANGER",
-            "ANGLE","ANGRY","ANIMAL","ANKLE","ANOTHER","ANSWER","ANTIC","ANVIL","APART","APPLE",
-            "APPLY","ARENA","ARGUE","ARISE","ARMOR","AROMA","ARROW","ASIDE","ASSET","AUDIO",
-            "AUDIT","AVOID","AWAKE","AWARD","AWARE","AWFUL","AXIOM","AZURE","BACON","BADGE",
-            "BADLY","BAGEL","BAKER","BALMY","BANAL","BANJO","BARGE","BARON","BASAL","BASIC",
-            "BASIL","BASIN","BASIS","BASKET","BATCH","BATHS","BATON","BATTY","BAWDY","BAYOU"
-        ]
-        for w in extra { set.insert(w) }
-        // Remove any non-5-letter entries from extras (defensive)
-        return Set(set.filter { $0.count == 5 })
+        // The full guess dictionary (WordDictionary.swift) already
+        // includes every answer-bank word, so an answer is always legal.
+        WordDictionary.guessSet
     }
     static func isValidGuess(_ word: String) -> Bool {
         validGuesses.contains(word.uppercased())

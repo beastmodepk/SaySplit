@@ -20,6 +20,7 @@
 		D20000000000000000000011 /* ImportExportViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000011 /* ImportExportViews.swift */; };
 		D20000000000000000000014 /* PaymentsComingSoonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000014 /* PaymentsComingSoonView.swift */; };
 		D20000000000000000000015 /* WordGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000015 /* WordGame.swift */; };
+		D20000000000000000000021 /* WordDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000021 /* WordDictionary.swift */; };
 		D20000000000000000000016 /* WordleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000016 /* WordleView.swift */; };
 		D20000000000000000000017 /* ConnectionsGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000017 /* ConnectionsGame.swift */; };
 		D20000000000000000000018 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000018 /* AuthManager.swift */; };
@@ -52,6 +53,7 @@
 		D10000000000000000000011 /* ImportExportViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportExportViews.swift; sourceTree = "<group>"; };
 		D10000000000000000000014 /* PaymentsComingSoonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsComingSoonView.swift; sourceTree = "<group>"; };
 		D10000000000000000000015 /* WordGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordGame.swift; sourceTree = "<group>"; };
+		D10000000000000000000021 /* WordDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordDictionary.swift; sourceTree = "<group>"; };
 		D10000000000000000000016 /* WordleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordleView.swift; sourceTree = "<group>"; };
 		D10000000000000000000017 /* ConnectionsGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsGame.swift; sourceTree = "<group>"; };
 		D10000000000000000000018 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 				D10000000000000000000011 /* ImportExportViews.swift */,
 				D10000000000000000000014 /* PaymentsComingSoonView.swift */,
 				D10000000000000000000015 /* WordGame.swift */,
+				D10000000000000000000021 /* WordDictionary.swift */,
 				D10000000000000000000016 /* WordleView.swift */,
 				D10000000000000000000017 /* ConnectionsGame.swift */,
 				D10000000000000000000018 /* AuthManager.swift */,
@@ -247,6 +250,7 @@
 				D20000000000000000000011 /* ImportExportViews.swift in Sources */,
 				D20000000000000000000014 /* PaymentsComingSoonView.swift in Sources */,
 				D20000000000000000000015 /* WordGame.swift in Sources */,
+				D20000000000000000000021 /* WordDictionary.swift in Sources */,
 				D20000000000000000000016 /* WordleView.swift in Sources */,
 				D20000000000000000000017 /* ConnectionsGame.swift in Sources */,
 				D20000000000000000000018 /* AuthManager.swift in Sources */,
