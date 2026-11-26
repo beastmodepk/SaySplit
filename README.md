@@ -18,6 +18,17 @@ App Store record are intentionally unchanged for now:
   4 mistakes allowed, correct groups lock in, win/lose states.
   Daily puzzle is deterministic by date from 14 embedded puzzles. Daily-only.
 
+## Date navigation
+
+At the top of the app, above both tabs, a date pager shows the selected
+date in full — e.g. **"Thursday, November 26, 2026"**:
+**‹** goes back to yesterday, the day before, and earlier; **›** moves
+forward again but is disabled/greyed on today (no future puzzles), and a
+**Today** shortcut appears whenever a past date is selected. Both games
+show the puzzles *for the selected date* (Wordle Easy/Medium/Hard words and
+the Connections board are seeded deterministically by date), and each date
+keeps its own board/progress (UserDefaults, keyed by date).
+
 ## Test access (demo mode — no login)
 
 **TestFlight Test Information (copy-ready):**

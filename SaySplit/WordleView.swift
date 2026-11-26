@@ -1,13 +1,20 @@
 import SwiftUI
 
 struct WordleView: View {
+    let selectedDate: Date
+
     @State private var difficulty: WordDifficulty = .easy
-    @State private var answer: String = DailyWordProvider.dailyWord(difficulty: .easy)
+    @State private var answer: String
     @State private var guesses: [String] = []
     @State private var current: String = ""
     @State private var message: String = ""
     @State private var finished = false
     @State private var won = false
+
+    init(selectedDate: Date) {
+        self.selectedDate = selectedDate
+        _answer = State(initialValue: DailyWordProvider.dailyWord(difficulty: .easy, date: selectedDate))
+    }
 
     private let rows = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
 
@@ -30,10 +37,11 @@ struct WordleView: View {
                         ForEach(WordDifficulty.allCases) { d in Text(d.title).tag(d) }
                     }
                     .pickerStyle(.segmented)
-                    .onChange(of: difficulty) { _, _ in startGame() }
+                    .onChange(of: difficulty) { _, _ in loadGame() }
 
-                    Text("Today's \(difficulty.title) word")
+                    Text("\(difficulty.title) word for \(GameCalendar.display(for: selectedDate))")
                         .font(.subheadline).foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
                     Text("Played \(WordStats.played(difficulty)) · Won \(WordStats.won(difficulty)) · Streak \(WordStats.streak(difficulty))")
                         .font(.caption).foregroundStyle(.secondary)
 
@@ -49,14 +57,11 @@ struct WordleView: View {
                     }
 
                     keyboard
-
-                    Button("Replay Today") { startGame() }
-                        .buttonStyle(.bordered)
                 }
                 .padding()
             }
             .navigationTitle("Wordle")
-            .onAppear { startGame() }
+            .onAppear { loadGame() }
         }
     }
 
@@ -144,14 +149,49 @@ struct WordleView: View {
         let guess = current
         guesses.append(guess)
         current = ""
+        WordleProgress.save(guesses: guesses, date: selectedDate, difficulty: difficulty)
         if WordEvaluator.isWin(guess: guess, answer: answer) {
-            won = true; finished = true; WordStats.record(difficulty: difficulty, won: true)
+            won = true; finished = true; recordResultIfNeeded(won: true)
         } else if guesses.count >= 6 {
-            won = false; finished = true; WordStats.record(difficulty: difficulty, won: false)
+            won = false; finished = true; recordResultIfNeeded(won: false)
         }
     }
-    private func startGame() {
-        answer = DailyWordProvider.dailyWord(difficulty: difficulty)
-        guesses = []; current = ""; message = ""; finished = false; won = false
+
+    /// Stats are recorded once per date + difficulty, so reopening a
+    /// finished past-day board never double-counts it.
+    private func recordResultIfNeeded(won: Bool) {
+        let key = "wordle.recorded.\(GameCalendar.key(for: selectedDate)).\(difficulty.rawValue)"
+        guard !UserDefaults.standard.bool(forKey: key) else { return }
+        UserDefaults.standard.set(true, forKey: key)
+        WordStats.record(difficulty: difficulty, won: won)
+    }
+
+    /// Loads the board for the selected date + difficulty, restoring any
+    /// guesses already made on that date.
+    private func loadGame() {
+        answer = DailyWordProvider.dailyWord(difficulty: difficulty, date: selectedDate)
+        guesses = WordleProgress.load(date: selectedDate, difficulty: difficulty)
+        current = ""; message = ""
+        if let last = guesses.last, WordEvaluator.isWin(guess: last, answer: answer) {
+            won = true; finished = true
+        } else if guesses.count >= 6 {
+            won = false; finished = true
+        } else {
+            won = false; finished = false
+        }
+    }
+}
+
+/// Per-date Wordle progress, keyed "wordle.<yyyy-MM-dd>.<difficulty>".
+enum WordleProgress {
+    private static func key(date: Date, difficulty: WordDifficulty) -> String {
+        "wordle.\(GameCalendar.key(for: date)).\(difficulty.rawValue)"
+    }
+    static func load(date: Date, difficulty: WordDifficulty) -> [String] {
+        let raw = UserDefaults.standard.string(forKey: key(date: date, difficulty: difficulty)) ?? ""
+        return raw.isEmpty ? [] : raw.components(separatedBy: ",")
+    }
+    static func save(guesses: [String], date: Date, difficulty: WordDifficulty) {
+        UserDefaults.standard.set(guesses.joined(separator: ","), forKey: key(date: date, difficulty: difficulty))
     }
 }

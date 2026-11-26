@@ -50,6 +50,34 @@ enum WordEvaluator {
     }
 }
 
+
+/// Shared date handling for the top date pager: puzzles are seeded by the
+/// selected date, progress is keyed by it, and navigation never goes future.
+enum GameCalendar {
+    static var today: Date { Calendar.current.startOfDay(for: Date()) }
+    static func startOfDay(_ date: Date) -> Date { Calendar.current.startOfDay(for: date) }
+    static func adding(days: Int, to date: Date) -> Date {
+        let d = Calendar.current.date(byAdding: .day, value: days, to: startOfDay(date)) ?? date
+        return min(startOfDay(d), today)
+    }
+    static func isToday(_ date: Date) -> Bool { startOfDay(date) == today }
+    static func canGoForward(from date: Date) -> Bool { startOfDay(date) < today }
+    /// Stable per-date storage key, e.g. "2026-11-26".
+    static func key(for date: Date) -> String {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.dateFormat = "yyyy-MM-dd"
+        return f.string(from: date)
+    }
+    /// Header label, e.g. "Thursday, November 26, 2026".
+    static func display(for date: Date) -> String {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.dateFormat = "EEEE, MMMM d, yyyy"
+        return f.string(from: date)
+    }
+}
+
 enum DailyWordProvider {
     static func dayNumber(for date: Date = Date()) -> Int {
         Int(date.timeIntervalSince1970 / 86400)

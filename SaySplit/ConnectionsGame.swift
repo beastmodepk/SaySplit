@@ -130,7 +130,9 @@ enum ConnectionsPuzzles {
 }
 
 struct ConnectionsView: View {
-    @State private var puzzle: ConnectionsPuzzle = ConnectionsPuzzles.daily()
+    let selectedDate: Date
+
+    @State private var puzzle: ConnectionsPuzzle
     @State private var remaining: [String] = []
     @State private var selected: Set<String> = []
     @State private var solved: [ConnectionsGroup] = []
@@ -139,10 +141,18 @@ struct ConnectionsView: View {
     @State private var finished = false
     @State private var won = false
 
+    init(selectedDate: Date) {
+        self.selectedDate = selectedDate
+        _puzzle = State(initialValue: ConnectionsPuzzles.daily(date: selectedDate))
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 12) {
+                    Text("Groups for \(GameCalendar.display(for: selectedDate))")
+                        .font(.subheadline).foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
                     Text("Create four groups of four · Mistakes left: \(max(0, 4 - mistakes))")
                         .font(.subheadline).foregroundStyle(.secondary)
 
@@ -175,7 +185,7 @@ struct ConnectionsView: View {
                     }
 
                     HStack {
-                        Button("Shuffle") { remaining.shuffle() }.buttonStyle(.bordered)
+                        Button("Shuffle") { remaining.shuffle(); saveProgress() }.buttonStyle(.bordered)
                         Button("Deselect") { selected.removeAll() }.buttonStyle(.bordered)
                         Button("Submit") { submit() }.buttonStyle(.borderedProminent).disabled(selected.count != 4 || finished)
                     }
@@ -183,7 +193,7 @@ struct ConnectionsView: View {
                 .padding()
             }
             .navigationTitle("Connections")
-            .onAppear { if remaining.isEmpty && solved.isEmpty { startGame() } }
+            .onAppear { loadGame() }
         }
     }
 
@@ -215,11 +225,67 @@ struct ConnectionsView: View {
                 selected.removeAll()
             }
         }
+        saveProgress()
     }
 
-    private func startGame() {
-        puzzle = ConnectionsPuzzles.daily()
-        remaining = puzzle.allWords.shuffled()
-        selected = []; solved = []; mistakes = 0; message = ""; finished = false; won = false
+    /// Loads the puzzle for the selected date, restoring that date's
+    /// solved groups / mistakes if it was already played.
+    private func loadGame() {
+        puzzle = ConnectionsPuzzles.daily(date: selectedDate)
+        if let saved = ConnectionsProgress.load(date: selectedDate, puzzle: puzzle) {
+            solved = saved.solved
+            remaining = saved.remaining
+            mistakes = saved.mistakes
+            finished = saved.finished
+            won = saved.won
+        } else {
+            remaining = puzzle.allWords.shuffled()
+            selected = []; solved = []; mistakes = 0; finished = false; won = false
+        }
+        selected = []
+        message = ""
+    }
+
+    private func saveProgress() {
+        ConnectionsProgress.save(date: selectedDate, solved: solved, remaining: remaining,
+                                 mistakes: mistakes, finished: finished, won: won)
+    }
+}
+
+/// Per-date Connections progress, keyed "connections.<yyyy-MM-dd>.*".
+/// Solved groups are stored by category name and re-matched to the date's puzzle.
+enum ConnectionsProgress {
+    struct Saved {
+        let solved: [ConnectionsGroup]
+        let remaining: [String]
+        let mistakes: Int
+        let finished: Bool
+        let won: Bool
+    }
+    private static func key(_ field: String, date: Date) -> String {
+        "connections.\(GameCalendar.key(for: date)).\(field)"
+    }
+    static func load(date: Date, puzzle: ConnectionsPuzzle) -> Saved? {
+        let d = UserDefaults.standard
+        guard d.object(forKey: key("mistakes", date: date)) != nil else { return nil }
+        let categories = (d.string(forKey: key("solved", date: date)) ?? "")
+            .components(separatedBy: "|").filter { !$0.isEmpty }
+        let solved = puzzle.groups.filter { categories.contains($0.category) }
+            .sorted { $0.level < $1.level }
+        let remainingRaw = d.string(forKey: key("remaining", date: date)) ?? ""
+        let remaining = remainingRaw.isEmpty ? [] : remainingRaw.components(separatedBy: ",")
+        return Saved(solved: solved, remaining: remaining,
+                     mistakes: d.integer(forKey: key("mistakes", date: date)),
+                     finished: d.bool(forKey: key("finished", date: date)),
+                     won: d.bool(forKey: key("won", date: date)))
+    }
+    static func save(date: Date, solved: [ConnectionsGroup], remaining: [String],
+                     mistakes: Int, finished: Bool, won: Bool) {
+        let d = UserDefaults.standard
+        d.set(solved.map { $0.category }.joined(separator: "|"), forKey: key("solved", date: date))
+        d.set(remaining.joined(separator: ","), forKey: key("remaining", date: date))
+        d.set(mistakes, forKey: key("mistakes", date: date))
+        d.set(finished, forKey: key("finished", date: date))
+        d.set(won, forKey: key("won", date: date))
     }
 }

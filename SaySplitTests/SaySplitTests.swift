@@ -80,4 +80,49 @@ final class SaySplitTests: XCTestCase {
     func testConnectionsDailyDeterministic() {
         XCTAssertEqual(ConnectionsPuzzles.daily(), ConnectionsPuzzles.daily())
     }
+
+    // MARK: - Date navigation
+
+    func testGameCalendarKeyAndDisplay() {
+        var comps = DateComponents(); comps.year = 2026; comps.month = 11; comps.day = 26
+        let date = Calendar.current.date(from: comps)!
+        XCTAssertEqual(GameCalendar.key(for: date), "2026-11-26")
+        XCTAssertEqual(GameCalendar.display(for: date), "Thursday, November 26, 2026")
+    }
+
+    func testGameCalendarNeverGoesFuture() {
+        XCTAssertFalse(GameCalendar.canGoForward(from: GameCalendar.today))
+        let yesterday = GameCalendar.adding(days: -1, to: GameCalendar.today)
+        XCTAssertTrue(GameCalendar.canGoForward(from: yesterday))
+        XCTAssertEqual(GameCalendar.adding(days: 1, to: yesterday), GameCalendar.today)
+        XCTAssertEqual(GameCalendar.adding(days: 1, to: GameCalendar.today), GameCalendar.today)
+        XCTAssertTrue(GameCalendar.isToday(GameCalendar.today))
+        XCTAssertFalse(GameCalendar.isToday(yesterday))
+    }
+
+    func testDailyPuzzlesAreForSelectedDate() {
+        let today = GameCalendar.today
+        let yesterday = GameCalendar.adding(days: -1, to: today)
+        for difficulty in WordDifficulty.allCases {
+            XCTAssertEqual(DailyWordProvider.dailyWord(difficulty: difficulty, date: yesterday),
+                           DailyWordProvider.dailyWord(difficulty: difficulty, date: yesterday))
+            XCTAssertEqual(DailyWordProvider.dailyWord(difficulty: difficulty, date: yesterday).count, 5)
+        }
+        XCTAssertEqual(ConnectionsPuzzles.daily(date: yesterday), ConnectionsPuzzles.daily(date: yesterday))
+        XCTAssertEqual(ConnectionsPuzzles.daily(date: yesterday).allWords.count, 16)
+    }
+
+    func testPerDateProgressRoundTrip() {
+        let date = GameCalendar.adding(days: -2, to: GameCalendar.today)
+        WordleProgress.save(guesses: ["CRANE", "SLATE"], date: date, difficulty: .medium)
+        XCTAssertEqual(WordleProgress.load(date: date, difficulty: .medium), ["CRANE", "SLATE"])
+        XCTAssertEqual(WordleProgress.load(date: date, difficulty: .easy), [])
+        let puzzle = ConnectionsPuzzles.daily(date: date)
+        ConnectionsProgress.save(date: date, solved: [puzzle.groups[0]], remaining: ["APPLE"],
+                                 mistakes: 2, finished: false, won: false)
+        let saved = ConnectionsProgress.load(date: date, puzzle: puzzle)
+        XCTAssertEqual(saved?.solved, [puzzle.groups[0]])
+        XCTAssertEqual(saved?.mistakes, 2)
+        XCTAssertEqual(saved?.remaining, ["APPLE"])
+    }
 }
