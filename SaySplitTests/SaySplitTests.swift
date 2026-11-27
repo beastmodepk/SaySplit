@@ -78,10 +78,43 @@ final class SaySplitTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(WordDictionary.count, 8000)
     }
 
+    func testDictionaryExactTokenIntegrity() {
+        // Build 111 bug: the dictionary's space-joined raw string is built
+        // from many string literals joined by +. Swift inserts NOTHING
+        // between literals, so any literal missing its trailing space
+        // merged two words into a bogus 10-letter token (HEART + HEAST
+        // became HEARTHEAST) and both real words vanished from the Set —
+        // while substring checks still "found" them. Exact token
+        // invariants catch any recurrence: one merge drops the count by
+        // one AND creates a non-5-letter token.
+        XCTAssertEqual(WordDictionary.count, 21664)
+        XCTAssertTrue(WordDictionary.guessSet.allSatisfy { $0.count == 5 },
+                      "every dictionary token must be exactly 5 letters")
+        let aToZ = Set("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+        XCTAssertTrue(WordDictionary.guessSet.allSatisfy { word in word.allSatisfy { aToZ.contains($0) } },
+                      "every dictionary token must be uppercase A-Z")
+    }
+
+    func testDictionaryBoundaryWordsSurvive() {
+        // Words that sat at string-literal boundaries in Build 111 and
+        // were destroyed by the merge bug, plus their merge partners.
+        for w in ["HEART", "HEAST", "CLEAN", "CRANE", "ABATE", "ABAUE"] {
+            XCTAssertTrue(WordLists.isValidGuess(w), "\(w) must be a valid guess (boundary regression)")
+        }
+        XCTAssertFalse(WordLists.isValidGuess("HEARTHEAST"))
+        // Answer-bank boundary pairs from the same bug.
+        XCTAssertTrue(WordLists.easyAnswers.contains("GRAPE"))
+        XCTAssertTrue(WordLists.easyAnswers.contains("PLANT"))
+        XCTAssertTrue(WordLists.mediumAnswers.contains("GUSTO"))
+        XCTAssertTrue(WordLists.mediumAnswers.contains("HASTE"))
+        XCTAssertTrue(WordLists.hardAnswers.contains("NYMPH"))
+        XCTAssertTrue(WordLists.hardAnswers.contains("OXIDE"))
+    }
+
     func testAnswerBanksEnrichedAndWellFormed() {
-        XCTAssertGreaterThanOrEqual(WordLists.easyAnswers.count, 250)
-        XCTAssertGreaterThanOrEqual(WordLists.mediumAnswers.count, 250)
-        XCTAssertGreaterThanOrEqual(WordLists.hardAnswers.count, 150)
+        XCTAssertEqual(WordLists.easyAnswers.count, 300)
+        XCTAssertEqual(WordLists.mediumAnswers.count, 300)
+        XCTAssertEqual(WordLists.hardAnswers.count, 200)
         for list in [WordLists.easyAnswers, WordLists.mediumAnswers, WordLists.hardAnswers] {
             XCTAssertEqual(list.count, Set(list).count, "answers must be unique within a bank")
             for w in list {

@@ -115,6 +115,52 @@ for token in ["IPHONEOS_DEPLOYMENT_TARGET = 17.0", "PRODUCT_BUNDLE_IDENTIFIER = 
               "TARGETED_DEVICE_FAMILY = 1;", "TEST_HOST"]:
     check(f"build setting present: {token.split('=')[0].strip()}", token in pbx, "")
 
+# 14. word data: EXACT token audit of the space-joined word strings.
+# Parse the Swift string literals exactly as the compiler concatenates
+# them (+ inserts NOTHING between literals), split on spaces, and compare
+# whole TOKENS — never substrings. (Build 111 shipped literals whose
+# missing trailing spaces merged boundary words into 10-letter tokens —
+# HEART+HEAST=HEARTHEAST — destroying 1,732 dictionary words and 37
+# answer-bank words while substring checks kept passing.)
+def exact_tokens(path, start_marker, end_marker):
+    t = open(path).read()
+    s = t.index(start_marker); e = t.index(end_marker, s)
+    lits = re.findall(r'"((?:[^"\\]|\\.)*)"', t[s:e])
+    return "".join(lits).split(" "), lits
+
+dict_tokens, dict_lits = exact_tokens(os.path.join(ROOT, "SaySplit/WordDictionary.swift"),
+                                      "static let rawWords", "/// Every accepted")
+dict_set = set(dict_tokens)
+check("word dictionary: exactly 21,664 unique tokens, all 5 letters",
+      len(dict_tokens) == 21664 and len(dict_set) == 21664 and all(len(t) == 5 for t in dict_tokens),
+      f"tokens={len(dict_tokens)} unique={len(dict_set)}")
+must_pass = "EARTH TREAD AUDIO HEART WORLD PLANT BRAVE WATER HOUSE LIGHT SOUND POINT THING STORY LEARN WRITE SPEAK WATCH YOUNG CLEAN DIRTY HAPPY QUICK MOIST CRANE SLATE ADIEU".split()
+check("word dictionary: all 27 must-pass words present as whole tokens",
+      all(w in dict_set for w in must_pass),
+      f"missing={[w for w in must_pass if w not in dict_set]}")
+check("word dictionary: every literal but the last ends with a space (merge impossible)",
+      all(l.endswith(" ") for l in dict_lits[:-1]), f"{len(dict_lits)} literals")
+
+wg_text = open(os.path.join(ROOT, "SaySplit/WordGame.swift")).read()
+all_answers = set()
+banks_ok = True; bank_detail = []
+for raw, letn, exp in [("easyAnswersRaw", "easyAnswers", 300),
+                       ("mediumAnswersRaw", "mediumAnswers", 300),
+                       ("hardAnswersRaw", "hardAnswers", 200)]:
+    s = wg_text.index(f"private static let {raw}"); e = wg_text.index(f"\n    static let {letn}:", s)
+    lits = re.findall(r'"((?:[^"\\]|\\.)*)"', wg_text[s:e])
+    toks = "".join(lits).split(" ")
+    all_answers |= set(toks)
+    ok = (len(toks) == exp and len(set(toks)) == exp and all(len(x) == 5 for x in toks)
+          and all(l.endswith(" ") for l in lits[:-1]))
+    banks_ok = banks_ok and ok
+    bank_detail.append(f"{raw}={len(toks)}")
+check("answer banks: exact token counts 300/300/200, all 5 letters, boundaries safe",
+      banks_ok, ", ".join(bank_detail))
+check("answer banks: every answer is a dictionary token",
+      all_answers <= dict_set,
+      f"missing={sorted(a for a in all_answers if a not in dict_set)[:10]}")
+
 print()
 failed = [r for r in results if not r[1]]
 print(f"TOTAL: {len(results)} checks, {len(results)-len(failed)} passed, {len(failed)} failed")
