@@ -140,6 +140,31 @@ final class SaySplitTests: XCTestCase {
         }
     }
 
+    // MARK: - Duplicate guesses
+
+    func testDuplicateGuessRefusedOnSameBoard() {
+        let board = ["AUDIO", "EARTH"]
+        XCTAssertTrue(WordLists.alreadyGuessed("EARTH", guesses: board))
+        XCTAssertTrue(WordLists.alreadyGuessed("earth", guesses: board))
+        XCTAssertTrue(WordLists.alreadyGuessed("AUDIO", guesses: board))
+        XCTAssertFalse(WordLists.alreadyGuessed("HEART", guesses: board))
+        XCTAssertFalse(WordLists.alreadyGuessed("EARTH", guesses: []))
+    }
+
+    func testSameWordAllowedOnDifferentBoard() {
+        // Scope is per date + difficulty, derived from the saved guesses:
+        // a word scored on Medium yesterday is not a duplicate on Easy
+        // that day, nor on Medium today.
+        let date = GameCalendar.adding(days: -1, to: GameCalendar.today)
+        WordleProgress.save(guesses: ["CRANE"], date: date, difficulty: .medium)
+        let mediumBoard = WordleProgress.load(date: date, difficulty: .medium)
+        let easyBoard = WordleProgress.load(date: date, difficulty: .easy)
+        let todayBoard = WordleProgress.load(date: GameCalendar.today, difficulty: .medium)
+        XCTAssertTrue(WordLists.alreadyGuessed("CRANE", guesses: mediumBoard))
+        XCTAssertFalse(WordLists.alreadyGuessed("CRANE", guesses: easyBoard))
+        XCTAssertFalse(WordLists.alreadyGuessed("CRANE", guesses: todayBoard))
+    }
+
     // MARK: - Group Four
 
     func testConnectionsPuzzlesWellFormed() {

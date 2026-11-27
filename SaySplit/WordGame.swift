@@ -157,6 +157,15 @@ enum WordLists {
     static func isValidGuess(_ word: String) -> Bool {
         validGuesses.contains(word.uppercased())
     }
+    /// A word already scored on THIS board may not be played again.
+    /// `guesses` is the board's own list — loaded from WordleProgress,
+    /// which is keyed per account + date + difficulty — so the scope is
+    /// exactly that board: the same word stays legal on another date or
+    /// difficulty, and the check survives an app relaunch because it is
+    /// derived from the saved guesses, not a separate store.
+    static func alreadyGuessed(_ word: String, guesses: [String]) -> Bool {
+        guesses.contains(word.uppercased())
+    }
 }
 
 enum WordStats {

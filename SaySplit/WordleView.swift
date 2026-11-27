@@ -69,15 +69,20 @@ struct WordleView: View {
         // Flexible grid items give every cell a definite, equal share of
         // the full available width. The old VStack/HStack layout let
         // SwiftUI size the cells from the letters' intrinsic size inside
-        // the ScrollView, which shrank the board to about half width and
-        // collapsed the still-empty last row to tiny squares (Build 111
-        // screenshot). LazyVGrid columns cannot do that: empty cells get
-        // exactly the same slot as filled ones.
+        // the ScrollView, which shrank the board to about half width,
+        // left-aligned, and collapsed the still-empty last row to tiny
+        // squares (Build 111 screenshot). This grid cannot do that: it
+        // spans the full content width with five equal columns (so it is
+        // centered by construction), and all 30 tiles — empty, being
+        // typed, or scored — are the same cell() view with the same
+        // sizing modifiers, so an empty box is exactly the size of a
+        // filled one.
         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 5), spacing: 6) {
             ForEach(0..<30, id: \.self) { idx in
                 cell(row: idx / 5, col: idx % 5)
             }
         }
+        .frame(maxWidth: .infinity)
     }
 
     private func cell(row: Int, col: Int) -> some View {
@@ -146,6 +151,9 @@ struct WordleView: View {
         guard !finished else { return }
         guard current.count == 5 else { message = "Enter a 5-letter word"; return }
         guard WordLists.isValidGuess(current) else { message = "Not in word list"; return }
+        // Duplicate on this board: refuse without scoring it or consuming
+        // a row; the typed word stays in place so it can be edited.
+        guard !WordLists.alreadyGuessed(current, guesses: guesses) else { message = "Already guessed"; return }
         let guess = current
         guesses.append(guess)
         current = ""
