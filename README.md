@@ -135,6 +135,16 @@ Playing never requires an account — signed-out play is stored as "guest".
 - **Compile status:** structurally validated on Linux
   (`validation/validate_structure.py`, 22/22); the real compile and
   tests run in CI.
+- **Push rule (every push, no exceptions):** before pushing, run
+  `python3 validation/validate_structure.py` AND
+  `python3 validation/stress_test.py` — the permanent stress test bed
+  (1,000 game fills x 5 guesses = 5,000 checks against the app's own
+  dictionary, answer banks and rules, parsed directly from the Swift
+  sources). A push is not "done" until all three pass:
+  validate_structure.py, the stress test bed (5,000/5,000), and both
+  GitHub workflows (build + release) green after the push.
+  (`python3 validation/validate_structure.py --full` runs the first
+  two back to back.)
 
 ## Project layout
 
@@ -157,6 +167,6 @@ SaySplit/
   Info.plist / Assets       app info + icon (names kept)
 SaySplitTests/              evaluator, daily/date, progress, auth/history tests
 docs/PUBLISHING.md          TestFlight pipeline + owner gates
-validation/                 structural validation + logic trace
+validation/                 structural validation, 5,000-check stress bed, logic trace
 .github/workflows/          build.yml + release.yml (names kept)
 ```

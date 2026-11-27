@@ -171,4 +171,19 @@ check("answer banks: every answer is a dictionary token",
 print()
 failed = [r for r in results if not r[1]]
 print(f"TOTAL: {len(results)} checks, {len(results)-len(failed)} passed, {len(failed)} failed")
-sys.exit(1 if failed else 0)
+if failed:
+    sys.exit(1)
+# Optional: --full also runs the permanent stress test bed
+# (validation/stress_test.py — 1,000 fills x 5 guesses = 5,000 checks
+# against the app's own dictionary, banks and rules). Default behavior
+# is unchanged: fast structural checks only. The push rule in the
+# README requires validate_structure.py + the stress bed + both green
+# GitHub workflows before any push counts as done.
+if "--full" in sys.argv:
+    import subprocess
+    print()
+    print("== --full: running stress test bed (5,000 checks) ==")
+    sys.stdout.flush()
+    sys.exit(subprocess.call([sys.executable,
+                              os.path.join(ROOT, "validation", "stress_test.py")]))
+sys.exit(0)
