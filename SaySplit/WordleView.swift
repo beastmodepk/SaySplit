@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct WordleView: View {
-    let selectedDate: Date
+    @Binding var selectedDate: Date
 
     @State private var difficulty: WordDifficulty = .easy
     @State private var answer: String
@@ -11,9 +11,9 @@ struct WordleView: View {
     @State private var finished = false
     @State private var won = false
 
-    init(selectedDate: Date) {
-        self.selectedDate = selectedDate
-        _answer = State(initialValue: DailyWordProvider.dailyWord(difficulty: .easy, date: selectedDate))
+    init(selectedDate: Binding<Date>) {
+        self._selectedDate = selectedDate
+        _answer = State(initialValue: DailyWordProvider.dailyWord(difficulty: .easy, date: selectedDate.wrappedValue))
     }
 
     private let rows = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
@@ -30,38 +30,60 @@ struct WordleView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 14) {
-                    Picker("Difficulty", selection: $difficulty) {
-                        ForEach(WordDifficulty.allCases) { d in Text(d.title).tag(d) }
-                    }
-                    .pickerStyle(.segmented)
-                    .onChange(of: difficulty) { _, _ in loadGame() }
+        VStack(spacing: 12) {
+            header
 
-                    Text("\(difficulty.title) word for \(GameCalendar.display(for: selectedDate))")
-                        .font(.subheadline).foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                    Text("Played \(WordStats.played(difficulty)) · Won \(WordStats.won(difficulty)) · Streak \(WordStats.streak(difficulty))")
-                        .font(.caption).foregroundStyle(.secondary)
+            DatePagerView(selectedDate: $selectedDate)
 
-                    grid
-
-                    if finished {
-                        Text(won ? "You got it in \(guesses.count)!" : "Out of guesses — the word was \(answer)")
-                            .font(.headline)
-                            .foregroundStyle(won ? .green : .red)
-                    }
-                    if !message.isEmpty {
-                        Text(message).font(.subheadline).foregroundStyle(.orange)
-                    }
-
-                    keyboard
+            // Board + keyboard sit as ONE group, centred vertically in
+            // the space left under the header — not hugging the top
+            // with a dead gap before a bottom-pinned keyboard. The
+            // ScrollView + minHeight frame centres the group when it
+            // is shorter than the space and lets it scroll when it
+            // isn't (small phones).
+            GeometryReader { geo in
+                ScrollView {
+                    gameGroup
+                        .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .center)
+                        .padding(.horizontal)
                 }
-                .padding()
             }
-            .navigationTitle("Word Trio")
-            .onAppear { loadGame() }
+        }
+        .padding(.top, 8)
+        .onAppear { loadGame() }
+    }
+
+    /// Title at the very top (where the date used to be), with the
+    /// Easy / Medium / Hard selector in the same header block.
+    private var header: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Word Trio")
+                .font(.largeTitle.bold())
+
+            Picker("Difficulty", selection: $difficulty) {
+                ForEach(WordDifficulty.allCases) { d in Text(d.title).tag(d) }
+            }
+            .pickerStyle(.segmented)
+            .onChange(of: difficulty) { _, _ in loadGame() }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal)
+    }
+
+    private var gameGroup: some View {
+        VStack(spacing: 14) {
+            grid
+
+            if finished {
+                Text(won ? "You got it in \(guesses.count)!" : "Out of guesses — the word was \(answer)")
+                    .font(.headline)
+                    .foregroundStyle(won ? .green : .red)
+            }
+            if !message.isEmpty {
+                Text(message).font(.subheadline).foregroundStyle(.orange)
+            }
+
+            keyboard
         }
     }
 

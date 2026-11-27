@@ -220,6 +220,16 @@ final class SaySplitTests: XCTestCase {
         XCTAssertFalse(GameCalendar.isToday(yesterday))
     }
 
+    /// History limit: the pager reaches back at most 5 days.
+    func testGameCalendarBackLimitIsFiveDays() {
+        let today = GameCalendar.today
+        XCTAssertEqual(GameCalendar.earliestDate, GameCalendar.adding(days: -5, to: today))
+        XCTAssertTrue(GameCalendar.canGoBack(from: today))
+        XCTAssertTrue(GameCalendar.canGoBack(from: GameCalendar.adding(days: -4, to: today)))
+        XCTAssertFalse(GameCalendar.canGoBack(from: GameCalendar.earliestDate),
+                       "at today − 5 the back button stops")
+    }
+
     func testDailyPuzzlesAreForSelectedDate() {
         let today = GameCalendar.today
         let yesterday = GameCalendar.adding(days: -1, to: today)

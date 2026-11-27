@@ -130,7 +130,7 @@ enum ConnectionsPuzzles {
 }
 
 struct ConnectionsView: View {
-    let selectedDate: Date
+    @Binding var selectedDate: Date
 
     @State private var puzzle: ConnectionsPuzzle
     @State private var remaining: [String] = []
@@ -141,61 +141,82 @@ struct ConnectionsView: View {
     @State private var finished = false
     @State private var won = false
 
-    init(selectedDate: Date) {
-        self.selectedDate = selectedDate
-        _puzzle = State(initialValue: ConnectionsPuzzles.daily(date: selectedDate))
+    init(selectedDate: Binding<Date>) {
+        self._selectedDate = selectedDate
+        _puzzle = State(initialValue: ConnectionsPuzzles.daily(date: selectedDate.wrappedValue))
     }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 12) {
-                    Text("Groups for \(GameCalendar.display(for: selectedDate))")
-                        .font(.subheadline).foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
-                    Text("Create four groups of four · Mistakes left: \(max(0, 4 - mistakes))")
-                        .font(.subheadline).foregroundStyle(.secondary)
+        VStack(spacing: 12) {
+            header
 
-                    ForEach(solved) { group in
-                        VStack(spacing: 2) {
-                            Text(group.category).font(.headline)
-                            Text(group.words.joined(separator: ", ")).font(.headline)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(10)
-                        .background(group.color)
-                        .cornerRadius(8)
-                    }
+            DatePagerView(selectedDate: $selectedDate)
 
-                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 4), spacing: 8) {
-                        ForEach(remaining, id: \.self) { word in
-                            Button(word) { toggle(word) }
-                                .font(.system(size: 18, weight: .bold))
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.75)
-                                .frame(maxWidth: .infinity, minHeight: 72)
-                                .background(selected.contains(word) ? Color.gray.opacity(0.7) : Color.gray.opacity(0.18))
-                                .foregroundStyle(selected.contains(word) ? Color.white : Color.primary)
-                                .cornerRadius(8)
-                        }
-                    }
-
-                    if !message.isEmpty { Text(message).font(.subheadline).foregroundStyle(.orange) }
-                    if finished {
-                        Text(won ? "You solved it!" : "Out of mistakes — groups revealed above.")
-                            .font(.headline).foregroundStyle(won ? .green : .red)
-                    }
-
-                    HStack {
-                        Button("Shuffle") { remaining.shuffle(); saveProgress() }.buttonStyle(.bordered)
-                        Button("Deselect") { selected.removeAll() }.buttonStyle(.bordered)
-                        Button("Submit") { submit() }.buttonStyle(.borderedProminent).disabled(selected.count != 4 || finished)
-                    }
+            // Tile grid + controls sit as ONE group, centred vertically
+            // in the space left under the header (same arrangement as
+            // Word Trio). The ScrollView + minHeight frame centres the
+            // group when it is shorter than the space and lets it
+            // scroll when it isn't.
+            GeometryReader { geo in
+                ScrollView {
+                    gameGroup
+                        .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .center)
+                        .padding(.horizontal)
                 }
-                .padding()
             }
-            .navigationTitle("Group Four")
-            .onAppear { loadGame() }
+        }
+        .padding(.top, 8)
+        .onAppear { loadGame() }
+    }
+
+    /// Title at the very top (where the date used to be).
+    private var header: some View {
+        Text("Group Four")
+            .font(.largeTitle.bold())
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal)
+    }
+
+    private var gameGroup: some View {
+        VStack(spacing: 12) {
+            Text("Create four groups of four · Mistakes left: \(max(0, 4 - mistakes))")
+                .font(.subheadline).foregroundStyle(.secondary)
+
+            ForEach(solved) { group in
+                VStack(spacing: 2) {
+                    Text(group.category).font(.headline)
+                    Text(group.words.joined(separator: ", ")).font(.headline)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(10)
+                .background(group.color)
+                .cornerRadius(8)
+            }
+
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 4), spacing: 8) {
+                ForEach(remaining, id: \.self) { word in
+                    Button(word) { toggle(word) }
+                        .font(.system(size: 18, weight: .bold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
+                        .frame(maxWidth: .infinity, minHeight: 72)
+                        .background(selected.contains(word) ? Color.gray.opacity(0.7) : Color.gray.opacity(0.18))
+                        .foregroundStyle(selected.contains(word) ? Color.white : Color.primary)
+                        .cornerRadius(8)
+                }
+            }
+
+            if !message.isEmpty { Text(message).font(.subheadline).foregroundStyle(.orange) }
+            if finished {
+                Text(won ? "You solved it!" : "Out of mistakes — groups revealed above.")
+                    .font(.headline).foregroundStyle(won ? .green : .red)
+            }
+
+            HStack {
+                Button("Shuffle") { remaining.shuffle(); saveProgress() }.buttonStyle(.bordered)
+                Button("Deselect") { selected.removeAll() }.buttonStyle(.bordered)
+                Button("Submit") { submit() }.buttonStyle(.borderedProminent).disabled(selected.count != 4 || finished)
+            }
         }
     }
 

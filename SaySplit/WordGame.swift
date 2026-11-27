@@ -62,6 +62,12 @@ enum GameCalendar {
     }
     static func isToday(_ date: Date) -> Bool { startOfDay(date) == today }
     static func canGoForward(from date: Date) -> Bool { startOfDay(date) < today }
+    /// History limit for everyone, free or premium: the pager reaches
+    /// back at most 5 days.
+    static var earliestDate: Date {
+        Calendar.current.date(byAdding: .day, value: -5, to: today) ?? today
+    }
+    static func canGoBack(from date: Date) -> Bool { startOfDay(date) > earliestDate }
     /// Stable per-date storage key, e.g. "2026-11-26".
     static func key(for date: Date) -> String {
         let f = DateFormatter()
