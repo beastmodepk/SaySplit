@@ -128,9 +128,18 @@ def exact_tokens(path, start_marker, end_marker):
     lits = re.findall(r'"((?:[^"\\]|\\.)*)"', t[s:e])
     return "".join(lits).split(" "), lits
 
-dict_tokens, dict_lits = exact_tokens(os.path.join(ROOT, "SaySplit/WordDictionary.swift"),
-                                      "static let rawWords", "/// Every accepted")
+dict_src = open(os.path.join(ROOT, "SaySplit/WordDictionary.swift")).read()
+rw = dict_src.index("static let rawWords")
+q1 = dict_src.index('"""', rw) + 3
+q2 = dict_src.index('"""', q1)
+dict_content = dict_src[q1:q2]
+dict_region = dict_src[rw:q2]
+# Swift strips the closing delimiter's indentation (8 spaces) per line.
+dict_lines = [l[8:] if l.startswith("        ") else l for l in dict_content.split("\n")]
+dict_tokens = " ".join(dict_lines).split()
 dict_set = set(dict_tokens)
+check("word dictionary: stored as ONE multiline literal (no + chain — merges impossible)",
+      '" +' not in dict_region and "split(whereSeparator" in dict_src, "")
 check("word dictionary: exactly 21,664 unique tokens, all 5 letters",
       len(dict_tokens) == 21664 and len(dict_set) == 21664 and all(len(t) == 5 for t in dict_tokens),
       f"tokens={len(dict_tokens)} unique={len(dict_set)}")
@@ -138,8 +147,6 @@ must_pass = "EARTH TREAD AUDIO HEART WORLD PLANT BRAVE WATER HOUSE LIGHT SOUND P
 check("word dictionary: all 27 must-pass words present as whole tokens",
       all(w in dict_set for w in must_pass),
       f"missing={[w for w in must_pass if w not in dict_set]}")
-check("word dictionary: every literal but the last ends with a space (merge impossible)",
-      all(l.endswith(" ") for l in dict_lits[:-1]), f"{len(dict_lits)} literals")
 
 wg_text = open(os.path.join(ROOT, "SaySplit/WordGame.swift")).read()
 all_answers = set()

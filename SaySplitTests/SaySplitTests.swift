@@ -79,14 +79,16 @@ final class SaySplitTests: XCTestCase {
     }
 
     func testDictionaryExactTokenIntegrity() {
-        // Build 111 bug: the dictionary's space-joined raw string is built
-        // from many string literals joined by +. Swift inserts NOTHING
-        // between literals, so any literal missing its trailing space
-        // merged two words into a bogus 10-letter token (HEART + HEAST
-        // became HEARTHEAST) and both real words vanished from the Set —
-        // while substring checks still "found" them. Exact token
-        // invariants catch any recurrence: one merge drops the count by
-        // one AND creates a non-5-letter token.
+        // Build 111 bug: the dictionary's raw string was built from many
+        // string literals joined by +. Swift inserts NOTHING between
+        // literals, so literals missing trailing spaces merged boundary
+        // word pairs into bogus 10-letter tokens (HEART + HEAST became
+        // HEARTHEAST) and both real words vanished from the Set — while
+        // substring checks still "found" them. The dictionary now lives
+        // in ONE multiline literal split on any whitespace, so merges
+        // are structurally impossible; these exact token invariants
+        // catch any regression regardless of storage format: one lost
+        // word drops the count, one merged token breaks the length rule.
         XCTAssertEqual(WordDictionary.count, 21664)
         XCTAssertTrue(WordDictionary.guessSet.allSatisfy { $0.count == 5 },
                       "every dictionary token must be exactly 5 letters")
