@@ -145,7 +145,7 @@ struct ConnectionsView: View {
     init(selectedDate: Binding<Date>) {
         self._selectedDate = selectedDate
         _puzzle = State(initialValue: ConnectionsPuzzles.daily(date: selectedDate.wrappedValue))
-        _access = State(initialValue: PremiumAccess.snapshot(game: .groupFour, date: selectedDate.wrappedValue))
+        _access = State(initialValue: PremiumAccess.snapshot(game: .groupFour, on: selectedDate.wrappedValue))
     }
 
     var body: some View {

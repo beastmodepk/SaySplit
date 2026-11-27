@@ -15,7 +15,7 @@ struct WordleView: View {
     init(selectedDate: Binding<Date>) {
         self._selectedDate = selectedDate
         _answer = State(initialValue: DailyWordProvider.dailyWord(difficulty: .easy, date: selectedDate.wrappedValue))
-        _access = State(initialValue: PremiumAccess.snapshot(game: .wordTrio, date: selectedDate.wrappedValue))
+        _access = State(initialValue: PremiumAccess.snapshot(game: .wordTrio, on: selectedDate.wrappedValue))
     }
 
     private let rows = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
