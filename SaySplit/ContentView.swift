@@ -47,7 +47,6 @@ struct DatePagerView: View {
                 Image(systemName: "chevron.left")
                     .font(.headline)
                     .frame(width: 64, height: 44)
-                    .contentShape(Rectangle())
             }
             .disabled(!canGoBack)
             .opacity(canGoBack ? 1 : 0.3)
@@ -79,7 +78,6 @@ struct DatePagerView: View {
                 Image(systemName: "chevron.right")
                     .font(.headline)
                     .frame(width: 64, height: 44)
-                    .contentShape(Rectangle())
             }
             .disabled(isToday)
             .opacity(isToday ? 0.3 : 1)
@@ -115,16 +113,15 @@ struct PremiumLockView: View {
             Text("$3 once, yours for life — not a subscription.")
                 .font(.headline)
             Button(action: onBuy) {
-                VStack(spacing: 2) {
-                    Text("Buy \(game.title) Premium — $3")
-                        .font(.headline)
-                    Text("Test purchase — no charge")
-                        .font(.caption)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 6)
+                Text("Buy \(game.title) Premium — $3")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 6)
             }
             .buttonStyle(.borderedProminent)
+            Text("Test purchase — no charge")
+                .font(.caption)
+                .foregroundStyle(.secondary)
             Text("Your progress and history are safe — they're waiting in the Account tab.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)

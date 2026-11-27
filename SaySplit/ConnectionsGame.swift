@@ -162,30 +162,23 @@ struct ConnectionsView: View {
 
             // Tile grid + controls sit as ONE group, centred vertically
             // in the space left under the header (same arrangement as
-            // Word Trio). The ScrollView + minHeight frame centres the
-            // group when it is shorter than the space and lets it
-            // scroll when it isn't. Once the free days are used up,
-            // the lock screen takes the board's place.
+            // Word Trio) — equal spacers above and below centre it.
+            // Once the free days are used up, the lock screen takes
+            // the board's place, centred the same way.
+            Spacer(minLength: 0)
+
             if access.canPlay {
-                GeometryReader { geo in
-                    ScrollView {
-                        gameGroup
-                            .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .center)
-                            .padding(.horizontal)
-                    }
-                }
+                gameGroup
+                    .padding(.horizontal)
             } else {
-                GeometryReader { geo in
-                    ScrollView {
-                        PremiumLockView(game: .groupFour) {
-                            PremiumAccess.buyTestPurchase(.groupFour)
-                            refreshAccess()
-                        }
-                        .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .center)
-                        .padding(.horizontal)
-                    }
+                PremiumLockView(game: .groupFour) {
+                    PremiumAccess.buyTestPurchase(.groupFour)
+                    refreshAccess()
                 }
+                .padding(.horizontal)
             }
+
+            Spacer(minLength: 0)
         }
         .padding(.top, 8)
         .onAppear { loadGame(); refreshAccess() }

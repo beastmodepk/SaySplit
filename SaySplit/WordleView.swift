@@ -44,32 +44,25 @@ struct WordleView: View {
                 .frame(maxWidth: .infinity)
 
             // Board + keyboard sit as ONE group, centred vertically in
-            // the space left under the header — not hugging the top
-            // with a dead gap before a bottom-pinned keyboard. The
-            // ScrollView + minHeight frame centres the group when it
-            // is shorter than the space and lets it scroll when it
-            // isn't (small phones). Once the free days are used up,
-            // the lock screen takes the board's place.
+            // the space left under the header — equal spacers above
+            // and below centre it instead of hugging the top with a
+            // dead gap before a bottom-pinned keyboard. Once the free
+            // days are used up, the lock screen takes the board's
+            // place, centred the same way.
+            Spacer(minLength: 0)
+
             if access.canPlay {
-                GeometryReader { geo in
-                    ScrollView {
-                        gameGroup
-                            .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .center)
-                            .padding(.horizontal)
-                    }
-                }
+                gameGroup
+                    .padding(.horizontal)
             } else {
-                GeometryReader { geo in
-                    ScrollView {
-                        PremiumLockView(game: .wordTrio) {
-                            PremiumAccess.buyTestPurchase(.wordTrio)
-                            refreshAccess()
-                        }
-                        .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .center)
-                        .padding(.horizontal)
-                    }
+                PremiumLockView(game: .wordTrio) {
+                    PremiumAccess.buyTestPurchase(.wordTrio)
+                    refreshAccess()
                 }
+                .padding(.horizontal)
             }
+
+            Spacer(minLength: 0)
         }
         .padding(.top, 8)
         .onAppear { loadGame(); refreshAccess() }

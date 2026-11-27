@@ -11,7 +11,7 @@ struct AccountView: View {
     @State private var history: [GameHistoryEntry] = []
     @State private var wordTrioReminderOn = false
     @State private var groupFourReminderOn = false
-    @State private var premiumCounter = PremiumAccess.counterText
+    @State private var premiumCounter = ""
     @State private var wordTrioPremium = false
     @State private var groupFourPremium = false
 
