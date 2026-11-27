@@ -50,20 +50,24 @@ struct WordleView: View {
             // is shorter than the space and lets it scroll when it
             // isn't (small phones). Once the free days are used up,
             // the lock screen takes the board's place.
-            GeometryReader { geo in
-                ScrollView {
-                    Group {
-                        if access.canPlay {
-                            gameGroup
-                        } else {
-                            PremiumLockView(game: .wordTrio) {
-                                PremiumAccess.buyTestPurchase(.wordTrio)
-                                refreshAccess()
-                            }
-                        }
+            if access.canPlay {
+                GeometryReader { geo in
+                    ScrollView {
+                        gameGroup
+                            .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .center)
+                            .padding(.horizontal)
                     }
-                    .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .center)
-                    .padding(.horizontal)
+                }
+            } else {
+                GeometryReader { geo in
+                    ScrollView {
+                        PremiumLockView(game: .wordTrio) {
+                            PremiumAccess.buyTestPurchase(.wordTrio)
+                            refreshAccess()
+                        }
+                        .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .center)
+                        .padding(.horizontal)
+                    }
                 }
             }
         }

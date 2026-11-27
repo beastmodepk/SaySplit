@@ -166,20 +166,24 @@ struct ConnectionsView: View {
             // group when it is shorter than the space and lets it
             // scroll when it isn't. Once the free days are used up,
             // the lock screen takes the board's place.
-            GeometryReader { geo in
-                ScrollView {
-                    Group {
-                        if access.canPlay {
-                            gameGroup
-                        } else {
-                            PremiumLockView(game: .groupFour) {
-                                PremiumAccess.buyTestPurchase(.groupFour)
-                                refreshAccess()
-                            }
-                        }
+            if access.canPlay {
+                GeometryReader { geo in
+                    ScrollView {
+                        gameGroup
+                            .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .center)
+                            .padding(.horizontal)
                     }
-                    .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .center)
-                    .padding(.horizontal)
+                }
+            } else {
+                GeometryReader { geo in
+                    ScrollView {
+                        PremiumLockView(game: .groupFour) {
+                            PremiumAccess.buyTestPurchase(.groupFour)
+                            refreshAccess()
+                        }
+                        .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .center)
+                        .padding(.horizontal)
+                    }
                 }
             }
         }
