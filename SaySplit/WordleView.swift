@@ -66,13 +66,16 @@ struct WordleView: View {
     }
 
     private var grid: some View {
-        VStack(spacing: 6) {
-            ForEach(0..<6, id: \.self) { row in
-                HStack(spacing: 6) {
-                    ForEach(0..<5, id: \.self) { col in
-                        cell(row: row, col: col)
-                    }
-                }
+        // Flexible grid items give every cell a definite, equal share of
+        // the full available width. The old VStack/HStack layout let
+        // SwiftUI size the cells from the letters' intrinsic size inside
+        // the ScrollView, which shrank the board to about half width and
+        // collapsed the still-empty last row to tiny squares (Build 111
+        // screenshot). LazyVGrid columns cannot do that: empty cells get
+        // exactly the same slot as filled ones.
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 5), spacing: 6) {
+            ForEach(0..<30, id: \.self) { idx in
+                cell(row: idx / 5, col: idx % 5)
             }
         }
     }
@@ -93,7 +96,7 @@ struct WordleView: View {
             state = .unknown
         }
         return Text(letter)
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .aspectRatio(1, contentMode: .fit)
             .font(.system(size: 34, weight: .bold))
             .minimumScaleFactor(0.7)
