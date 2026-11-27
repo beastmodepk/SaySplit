@@ -11,6 +11,9 @@ struct AccountView: View {
     @State private var history: [GameHistoryEntry] = []
     @State private var wordTrioReminderOn = false
     @State private var groupFourReminderOn = false
+    @State private var premiumCounter = PremiumAccess.counterText
+    @State private var wordTrioPremium = false
+    @State private var groupFourPremium = false
 
     var body: some View {
         NavigationStack {
@@ -27,6 +30,8 @@ struct AccountView: View {
                         signedOutSection
                     }
 
+                    premiumSection
+
                     historySection
 
                     notificationsSection
@@ -39,6 +44,7 @@ struct AccountView: View {
             .onAppear {
                 refreshHistory()
                 loadReminderToggles()
+                refreshPremium()
             }
             .onChange(of: wordTrioReminderOn) { _, on in applyReminderToggle(.wordTrio, on) }
             .onChange(of: groupFourReminderOn) { _, on in applyReminderToggle(.groupFour, on) }
@@ -89,6 +95,42 @@ struct AccountView: View {
                 .font(.footnote)
                 .foregroundStyle(Color.secondary)
         }
+    }
+
+    // MARK: - Premium
+
+    private var premiumSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Premium")
+                .font(.title3.bold())
+            Text(premiumCounter)
+                .font(.subheadline)
+                .foregroundStyle(Color.secondary)
+            Text("Word Games is free for 15 days of play — a day counts only when you actually play that day's puzzles, so skipped days cost nothing. After that, each game is $3 once, yours for life — not a subscription. The two games are sold separately.")
+                .font(.subheadline)
+                .foregroundStyle(Color.secondary)
+
+            VStack(spacing: 0) {
+                PremiumGameRow(game: .wordTrio, owned: wordTrioPremium) {
+                    PremiumAccess.buyTestPurchase(.wordTrio)
+                    refreshPremium()
+                }
+                Divider()
+                PremiumGameRow(game: .groupFour, owned: groupFourPremium) {
+                    PremiumAccess.buyTestPurchase(.groupFour)
+                    refreshPremium()
+                }
+            }
+            .padding(.horizontal, 12)
+            .background(Color.gray.opacity(0.12))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+
+    private func refreshPremium() {
+        premiumCounter = PremiumAccess.counterText
+        wordTrioPremium = PremiumAccess.isPremium(.wordTrio)
+        groupFourPremium = PremiumAccess.isPremium(.groupFour)
     }
 
     // MARK: - History
@@ -277,6 +319,44 @@ private struct ReminderToggleRow: View {
                 .labelsHidden()
         }
         .padding(.vertical, 8)
+    }
+}
+
+// MARK: - Premium game row
+
+/// One game's premium status + Buy button. The Buy button performs a
+/// TEST purchase in this build (no charge — labelled as such); real
+/// StoreKit purchasing is enabled when the app is published to Apple.
+private struct PremiumGameRow: View {
+    let game: PremiumGame
+    let owned: Bool
+    let onBuy: () -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("\(game.title) Premium").font(.headline)
+                Text(owned ? "Premium — lifetime, bought for $3" : "$3 once, yours for life — not a subscription")
+                    .font(.subheadline)
+                    .foregroundStyle(Color.secondary)
+            }
+            Spacer()
+            if owned {
+                Image(systemName: "checkmark.seal.fill")
+                    .foregroundStyle(Color.green)
+                    .font(.title3)
+            } else {
+                Button(action: onBuy) {
+                    VStack(spacing: 1) {
+                        Text("Buy — $3").font(.headline)
+                        Text("Test purchase — no charge").font(.caption2)
+                    }
+                    .padding(.vertical, 2)
+                }
+                .buttonStyle(.borderedProminent)
+            }
+        }
+        .padding(.vertical, 10)
     }
 }
 

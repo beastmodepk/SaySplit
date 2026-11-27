@@ -140,10 +140,12 @@ struct ConnectionsView: View {
     @State private var message = ""
     @State private var finished = false
     @State private var won = false
+    @State private var access: PremiumSnapshot
 
     init(selectedDate: Binding<Date>) {
         self._selectedDate = selectedDate
         _puzzle = State(initialValue: ConnectionsPuzzles.daily(date: selectedDate.wrappedValue))
+        _access = State(initialValue: PremiumAccess.snapshot(game: .groupFour, date: selectedDate.wrappedValue))
     }
 
     var body: some View {
@@ -152,21 +154,41 @@ struct ConnectionsView: View {
 
             DatePagerView(selectedDate: $selectedDate)
 
+            Text(access.counterText)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+
             // Tile grid + controls sit as ONE group, centred vertically
             // in the space left under the header (same arrangement as
             // Word Trio). The ScrollView + minHeight frame centres the
             // group when it is shorter than the space and lets it
-            // scroll when it isn't.
+            // scroll when it isn't. Once the free days are used up,
+            // the lock screen takes the board's place.
             GeometryReader { geo in
                 ScrollView {
-                    gameGroup
-                        .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .center)
-                        .padding(.horizontal)
+                    Group {
+                        if access.canPlay {
+                            gameGroup
+                        } else {
+                            PremiumLockView(game: .groupFour) {
+                                PremiumAccess.buyTestPurchase(.groupFour)
+                                refreshAccess()
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .center)
+                    .padding(.horizontal)
                 }
             }
         }
         .padding(.top, 8)
-        .onAppear { loadGame() }
+        .onAppear { loadGame(); refreshAccess() }
+    }
+
+    private func refreshAccess() {
+        access = PremiumAccess.snapshot(game: .groupFour, on: selectedDate)
     }
 
     /// Title at the very top (where the date used to be).
@@ -228,6 +250,13 @@ struct ConnectionsView: View {
 
     private func submit() {
         guard selected.count == 4 else { return }
+        guard !finished else { return }
+        guard access.canPlay else { message = "Premium required"; return }
+        // A submission is this game's accepted guess: it counts this
+        // board date toward the 15 free played days (once — the store
+        // is idempotent per date) and refreshes the counter at once.
+        PremiumAccess.recordPlayed(date: selectedDate)
+        refreshAccess()
         if let group = ConnectionsLogic.matchingGroup(selected: selected, in: puzzle) {
             solved.append(group)
             solved.sort { $0.level < $1.level }

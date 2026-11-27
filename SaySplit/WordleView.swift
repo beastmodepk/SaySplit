@@ -10,10 +10,12 @@ struct WordleView: View {
     @State private var message: String = ""
     @State private var finished = false
     @State private var won = false
+    @State private var access: PremiumSnapshot
 
     init(selectedDate: Binding<Date>) {
         self._selectedDate = selectedDate
         _answer = State(initialValue: DailyWordProvider.dailyWord(difficulty: .easy, date: selectedDate.wrappedValue))
+        _access = State(initialValue: PremiumAccess.snapshot(game: .wordTrio, date: selectedDate.wrappedValue))
     }
 
     private let rows = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"]
@@ -35,22 +37,42 @@ struct WordleView: View {
 
             DatePagerView(selectedDate: $selectedDate)
 
+            Text(access.counterText)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+
             // Board + keyboard sit as ONE group, centred vertically in
             // the space left under the header — not hugging the top
             // with a dead gap before a bottom-pinned keyboard. The
             // ScrollView + minHeight frame centres the group when it
             // is shorter than the space and lets it scroll when it
-            // isn't (small phones).
+            // isn't (small phones). Once the free days are used up,
+            // the lock screen takes the board's place.
             GeometryReader { geo in
                 ScrollView {
-                    gameGroup
-                        .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .center)
-                        .padding(.horizontal)
+                    Group {
+                        if access.canPlay {
+                            gameGroup
+                        } else {
+                            PremiumLockView(game: .wordTrio) {
+                                PremiumAccess.buyTestPurchase(.wordTrio)
+                                refreshAccess()
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .center)
+                    .padding(.horizontal)
                 }
             }
         }
         .padding(.top, 8)
-        .onAppear { loadGame() }
+        .onAppear { loadGame(); refreshAccess() }
+    }
+
+    private func refreshAccess() {
+        access = PremiumAccess.snapshot(game: .wordTrio, on: selectedDate)
     }
 
     /// Title at the very top (where the date used to be), with the
@@ -176,6 +198,12 @@ struct WordleView: View {
         // Duplicate on this board: refuse without scoring it or consuming
         // a row; the typed word stays in place so it can be edited.
         guard !WordLists.alreadyGuessed(current, guesses: guesses) else { message = "Already guessed"; return }
+        // An accepted guess is what counts this board date toward the
+        // 15 free played days — record it the moment the guess lands
+        // and refresh the counter immediately.
+        guard access.canPlay else { message = "Premium required"; return }
+        PremiumAccess.recordPlayed(date: selectedDate)
+        refreshAccess()
         let guess = current
         guesses.append(guess)
         current = ""
