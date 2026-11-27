@@ -186,3 +186,107 @@ enum WordStats {
     static func won(_ difficulty: WordDifficulty) -> Int { UserDefaults.standard.integer(forKey: key(difficulty, "won")) }
     static func streak(_ difficulty: WordDifficulty) -> Int { UserDefaults.standard.integer(forKey: key(difficulty, "streak")) }
 }
+
+// MARK: - Free days & per-game premium
+
+/// The two purchasable games. Premium is sold PER GAME: Word Trio
+/// Premium and Group Four Premium are independent one-time purchases
+/// ($3 each, lifetime — not subscriptions).
+enum PremiumGame: String, CaseIterable, Identifiable {
+    case wordTrio, groupFour
+    var id: String { rawValue }
+    var title: String {
+        switch self {
+        case .wordTrio: return "Word Trio"
+        case .groupFour: return "Group Four"
+        }
+    }
+}
+
+/// A point-in-time view of the free-days / premium state for one game
+/// on one date, so SwiftUI can render from it and refresh it after a
+/// guess lands or a purchase completes.
+struct PremiumSnapshot: Equatable {
+    let usedDays: Int
+    let freeDaysLeft: Int
+    let isPremium: Bool
+    let canPlay: Bool
+    var counterText: String {
+        "Free days used: \(usedDays) of \(PremiumAccess.freeDayLimit) · \(freeDaysLeft) free days left"
+    }
+}
+
+/// Free-days allowance + per-game premium ownership, stored per account
+/// in UserDefaults ("acct.<account>.premium.*").
+///
+/// FREE DAYS = 15 DISTINCT PLAYED BOARD DATES, shared across all games.
+/// A board date counts once — the moment the first accepted guess on
+/// any board of that date lands (a valid, non-duplicate Word Trio
+/// guess, or a Group Four submission). Merely opening the app or
+/// paging across dates burns nothing, and skipped days burn nothing:
+/// only the set of played dates is stored, never a first-launch date.
+/// A date already counted stays playable after the allowance ends;
+/// from the 16th distinct played board date, each game locks unless
+/// its own premium is owned.
+///
+/// PURCHASES: real StoreKit purchasing is deliberately NOT enabled in
+/// this build — it gets switched on when the app is published to
+/// Apple. `buyTestPurchase(_:)` is the single, isolated seam: the
+/// Buy buttons call it to perform a clearly-labelled TEST purchase
+/// (no charge) that sets the same ownership flag a StoreKit
+/// non-consumable purchase will set later. Enabling StoreKit means
+/// replacing that one function's body and putting the real purchase
+/// flow in front of it; nothing else changes.
+enum PremiumAccess {
+    static let freeDayLimit = 15
+
+    private static func key(_ field: String) -> String {
+        "acct.\(AuthManager.currentStorageKey).premium.\(field)"
+    }
+
+    static func playedDateKeys() -> [String] {
+        let raw = UserDefaults.standard.string(forKey: key("playedDates")) ?? ""
+        return raw.isEmpty ? [] : raw.components(separatedBy: ",")
+    }
+
+    static var usedDays: Int { playedDateKeys().count }
+    static var freeDaysLeft: Int { max(0, freeDayLimit - usedDays) }
+
+    static func isPremium(_ game: PremiumGame) -> Bool {
+        UserDefaults.standard.bool(forKey: key("owned.\(game.rawValue)"))
+    }
+
+    /// TEST purchase (no charge) — see the type comment above. Sets
+    /// the lifetime ownership flag permanently for this account.
+    static func buyTestPurchase(_ game: PremiumGame) {
+        UserDefaults.standard.set(true, forKey: key("owned.\(game.rawValue)"))
+    }
+
+    /// Records a board date as played. Idempotent: a date counts once,
+    /// however many boards of that date get played.
+    static func recordPlayed(date: Date) {
+        let dateKey = GameCalendar.key(for: date)
+        var dates = playedDateKeys()
+        guard !dates.contains(dateKey) else { return }
+        dates.append(dateKey)
+        dates.sort()
+        UserDefaults.standard.set(dates.joined(separator: ","), forKey: key("playedDates"))
+    }
+
+    static func canPlay(game: PremiumGame, on date: Date) -> Bool {
+        if isPremium(game) { return true }
+        if playedDateKeys().contains(GameCalendar.key(for: date)) { return true }
+        return usedDays < freeDayLimit
+    }
+
+    static func snapshot(game: PremiumGame, on date: Date) -> PremiumSnapshot {
+        PremiumSnapshot(usedDays: usedDays,
+                        freeDaysLeft: freeDaysLeft,
+                        isPremium: isPremium(game),
+                        canPlay: canPlay(game: game, on: date))
+    }
+
+    static var counterText: String {
+        "Free days used: \(usedDays) of \(freeDayLimit) · \(freeDaysLeft) free days left"
+    }
+}

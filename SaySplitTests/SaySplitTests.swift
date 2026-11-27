@@ -355,4 +355,67 @@ final class SaySplitTests: XCTestCase {
         XCTAssertEqual(planned.count, 19 * 2)
         XCTAssertTrue(planned.allSatisfy { $0.fireDate > now })
     }
+
+    // MARK: - Free days & per-game premium
+
+    private func resetPremiumState() {
+        let d = UserDefaults.standard
+        let acct = AuthManager.currentStorageKey
+        d.removeObject(forKey: "acct.\(acct).premium.playedDates")
+        for game in PremiumGame.allCases {
+            d.removeObject(forKey: "acct.\(acct).premium.owned.\(game.rawValue)")
+        }
+    }
+
+    /// A free day is a distinct PLAYED board date: playing today and
+    /// yesterday in one sitting counts 2; replaying a counted date
+    /// counts nothing more; paging/opening never records anything.
+    func testFreeDaysCountDistinctPlayedBoardDates() {
+        resetPremiumState()
+        let today = GameCalendar.today
+        let yesterday = GameCalendar.adding(days: -1, to: today)
+        XCTAssertEqual(PremiumAccess.usedDays, 0)
+        XCTAssertEqual(PremiumAccess.freeDaysLeft, 15)
+
+        PremiumAccess.recordPlayed(date: today)
+        XCTAssertEqual(PremiumAccess.usedDays, 1)
+        PremiumAccess.recordPlayed(date: yesterday)
+        XCTAssertEqual(PremiumAccess.usedDays, 2, "today + yesterday played = 2 days used")
+        XCTAssertEqual(PremiumAccess.freeDaysLeft, 13)
+        XCTAssertEqual(PremiumAccess.snapshot(game: .wordTrio, on: today).counterText,
+                       "Free days used: 2 of 15 · 13 free days left")
+
+        PremiumAccess.recordPlayed(date: today)
+        PremiumAccess.recordPlayed(date: yesterday)
+        XCTAssertEqual(PremiumAccess.usedDays, 2, "a counted date never counts twice")
+        resetPremiumState()
+    }
+
+    /// After 15 distinct played dates, a 16th date locks per game;
+    /// counted dates stay playable; buying one game's premium unlocks
+    /// only that game.
+    func testSixteenthPlayedDateLocksPerGame() {
+        resetPremiumState()
+        let today = GameCalendar.today
+        for offset in 0..<15 {
+            PremiumAccess.recordPlayed(date: GameCalendar.adding(days: -offset, to: today))
+        }
+        XCTAssertEqual(PremiumAccess.usedDays, 15)
+        XCTAssertEqual(PremiumAccess.freeDaysLeft, 0)
+
+        let sixteenth = Calendar.current.date(byAdding: .day, value: -15, to: today)!
+        XCTAssertFalse(PremiumAccess.canPlay(game: .wordTrio, on: sixteenth))
+        XCTAssertFalse(PremiumAccess.canPlay(game: .groupFour, on: sixteenth))
+        XCTAssertTrue(PremiumAccess.canPlay(game: .wordTrio, on: today),
+                      "an already-counted date stays playable")
+        XCTAssertTrue(PremiumAccess.canPlay(game: .groupFour, on: today))
+
+        PremiumAccess.buyTestPurchase(.wordTrio)
+        XCTAssertTrue(PremiumAccess.canPlay(game: .wordTrio, on: sixteenth))
+        XCTAssertFalse(PremiumAccess.canPlay(game: .groupFour, on: sixteenth),
+                       "Word Trio premium must not unlock Group Four")
+        XCTAssertTrue(PremiumAccess.snapshot(game: .wordTrio, on: sixteenth).isPremium)
+        XCTAssertFalse(PremiumAccess.snapshot(game: .groupFour, on: sixteenth).isPremium)
+        resetPremiumState()
+    }
 }
