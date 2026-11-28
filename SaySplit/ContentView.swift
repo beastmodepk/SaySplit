@@ -17,6 +17,11 @@ import SwiftUI
 /// window's true safe-area insets, and each game tab gets them back
 /// explicitly: header starts at safe-area-top + 24, mirroring the
 /// Muse web app's `padding-top: env(safe-area-inset-top) + 24px`.
+/// Same story at the bottom: the floating tab pill (~64pt) overlays
+/// content instead of reserving space, and in Build 181 it covered
+/// the keyboard's ENTER row — so each game tab also ends at
+/// safe-area-bottom + 96 (the pill plus a clear gap), mirroring
+/// Muse's `padding-bottom: env(safe-area-inset-bottom) + 96px`.
 struct ContentView: View {
     @EnvironmentObject private var auth: AuthManager
     @State private var selectedDate: Date = GameCalendar.today
@@ -26,10 +31,12 @@ struct ContentView: View {
             TabView {
                 WordleView(selectedDate: $selectedDate)
                     .padding(.top, proxy.safeAreaInsets.top + 24)
+                    .padding(.bottom, proxy.safeAreaInsets.bottom + 96)
                     .id(auth.storageKey + "|" + GameCalendar.key(for: selectedDate))
                     .tabItem { Label("Word Trio", systemImage: "square.grid.3x3.fill") }
                 ConnectionsView(selectedDate: $selectedDate)
                     .padding(.top, proxy.safeAreaInsets.top + 24)
+                    .padding(.bottom, proxy.safeAreaInsets.bottom + 96)
                     .id(auth.storageKey + "|" + GameCalendar.key(for: selectedDate))
                     .tabItem { Label("Group Four", systemImage: "square.grid.2x2.fill") }
                 AccountView()
