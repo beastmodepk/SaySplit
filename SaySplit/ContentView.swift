@@ -8,20 +8,33 @@ import SwiftUI
 /// The ‹ › pager under each game title goes back to yesterday and earlier
 /// days — at most 5 days back, never into the future — and a "Back to
 /// today" shortcut appears on past days.
+///
+/// Chrome insets: the iOS 26 TabView lays tab content out full-bleed
+/// and floats its tab pill OVER the content, and the game screens are
+/// bare VStacks with no navigation bar — so nothing kept the header
+/// out of the status bar (Build 181: the clock struck through the
+/// "Word Trio" title). The GeometryReader at this root reads the
+/// window's true safe-area insets, and each game tab gets them back
+/// explicitly: header starts at safe-area-top + 24, mirroring the
+/// Muse web app's `padding-top: env(safe-area-inset-top) + 24px`.
 struct ContentView: View {
     @EnvironmentObject private var auth: AuthManager
     @State private var selectedDate: Date = GameCalendar.today
 
     var body: some View {
-        TabView {
-            WordleView(selectedDate: $selectedDate)
-                .id(auth.storageKey + "|" + GameCalendar.key(for: selectedDate))
-                .tabItem { Label("Word Trio", systemImage: "square.grid.3x3.fill") }
-            ConnectionsView(selectedDate: $selectedDate)
-                .id(auth.storageKey + "|" + GameCalendar.key(for: selectedDate))
-                .tabItem { Label("Group Four", systemImage: "square.grid.2x2.fill") }
-            AccountView()
-                .tabItem { Label("Account", systemImage: "person.circle") }
+        GeometryReader { proxy in
+            TabView {
+                WordleView(selectedDate: $selectedDate)
+                    .padding(.top, proxy.safeAreaInsets.top + 24)
+                    .id(auth.storageKey + "|" + GameCalendar.key(for: selectedDate))
+                    .tabItem { Label("Word Trio", systemImage: "square.grid.3x3.fill") }
+                ConnectionsView(selectedDate: $selectedDate)
+                    .padding(.top, proxy.safeAreaInsets.top + 24)
+                    .id(auth.storageKey + "|" + GameCalendar.key(for: selectedDate))
+                    .tabItem { Label("Group Four", systemImage: "square.grid.2x2.fill") }
+                AccountView()
+                    .tabItem { Label("Account", systemImage: "person.circle") }
+            }
         }
     }
 }

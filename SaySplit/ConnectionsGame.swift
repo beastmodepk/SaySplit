@@ -180,7 +180,9 @@ struct ConnectionsView: View {
 
             Spacer(minLength: 0)
         }
-        .padding(.top, 8)
+        // No top padding here: ContentView's tab scaffold insets the
+        // whole screen by safe-area-top + 24 so the header can never
+        // ride up into the status bar.
         .onAppear { loadGame(); refreshAccess() }
     }
 
